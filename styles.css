@@ -1,0 +1,173 @@
+body {
+    font-family: Arial, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    height: 100vh;
+    background-color: #f0f0f0;
+    margin: 0;
+    overflow: auto;
+}
+
+.calendar-container {
+    background: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+    margin-top: 20px;
+    width: 90%; /* Adjusted to accommodate wider day divs */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.input-group {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Add some space between elements */
+    margin-bottom: 10px;
+}
+
+input[type="date"], input[type="text"] {
+    margin: 10px;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.button-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px; /* Add some space between buttons */
+    margin: 10px 0;
+}
+
+button, .custom-file-upload {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-block;
+    margin: 10px 5px;
+}
+
+button:hover, .custom-file-upload:hover {
+    background-color: #0056b3;
+}
+
+.separator {
+    width: 1px;
+    height: 30px;
+    background-color: #ccc;
+    margin: 0 10px;
+}
+
+#load-calendar {
+    display: none;
+}
+
+#calendar {
+    margin-top: 20px;
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) 50px; /* Adjusted to make the 6th column narrower */
+    gap: 10px;
+}
+
+.day {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #e9ecef;
+    min-height: 100px;
+    cursor: pointer;
+    word-wrap: break-word; /* Ensure text wraps within the box */
+}
+
+.holiday {
+    background-color: #ffcccc;
+    color: #721c24; /* Ensuring contrast */
+}
+
+.content {
+    background-color: #d1ecf1;
+    color: #0c5460; /* Ensuring contrast */
+}
+
+.homework {
+    background-color: #fff3cd;
+    color: #856404; /* Ensuring contrast */
+}
+
+.eval {
+    background-color: #d4edda;
+    color: #155724; /* Ensuring contrast */
+}
+
+.link {
+    background-color: #cce5ff;
+    color: #004085; /* Ensuring contrast */
+}
+
+.link a {
+    color: #004085; /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+.link a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.link a:visited {
+    color: #004085; /* Ensure visited link color stays the same */
+}
+
+.notification {
+    background-color: #d1ecf1; /* Softer color */
+    color: #0c5460; /* Ensuring contrast */
+    padding: 10px;
+    border-radius: 4px;
+    margin-top: 10px;
+    text-align: center;
+}
+
+.personal-note, .personal-link {
+    background-color: #e2e3e5; /* Unique color */
+    color: #383d41; /* Ensuring contrast */
+}
+
+.personal-link a {
+    color: #383d41; /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+.personal-link a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.personal-link a:visited {
+    color: #383d41; /* Ensure visited link color stays the same */
+}
+
+
+/* Media query for responsive design */
+@media (max-width: 600px) {
+    .input-group {
+        flex-direction: column; /* Stack inputs and buttons vertically */
+        align-items: stretch; /* Stretch inputs and buttons to full width */
+    }
+
+    #calendar {
+        grid-template-columns: 1fr; /* Single column layout on small screens */
+    }
+
+    input[type="date"], input[type="text"], button {
+        width: 100%; /* Full width for inputs and buttons */
+        margin: 5px 0; /* Reduce margin for better spacing */
+    }
+}
