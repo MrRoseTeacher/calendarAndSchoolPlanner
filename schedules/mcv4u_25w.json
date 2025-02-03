@@ -27,6 +27,10 @@
         {
           "type": "personal-link",
           "text": "<a href=\"https://drive.google.com/file/d/1TUO7-dK5FxKnKmUuNDNbR_Zyuaa4QYhA/view?usp=drive_link\" target=\"_blank\">Diagnotic Test</a>"
+        },
+        {
+          "type": "personal-link",
+          "text": "<a href=\"https://docs.google.com/presentation/d/1jOrEQ9F5OcPdwAH1IuRtv3m74_3oTP2U-EJYxJm7irA/edit?usp=drive_link\" target=\"_blank\">Examples of Tell Me Who You Are</a>"
         }
       ]
     },
