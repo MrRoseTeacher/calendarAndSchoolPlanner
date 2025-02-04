@@ -1,4 +1,5 @@
 let changesMade = false;
+let calendarLoaded = false;
 
 function showNotification() {
     const notification = document.getElementById('notification');
@@ -14,6 +15,8 @@ function markChanges() {
 
 function generateCalendar() {
     changesMade = false; // Reset changes flag
+    calendarLoaded = true; // Mark calendar as loaded
+    document.getElementById('merge-button').disabled = false; // Enable merge button
     const startDate = new Date(document.getElementById('start-date').value);
     const endDate = new Date(document.getElementById('end-date').value);
     const calendar = document.getElementById('calendar');
@@ -194,6 +197,8 @@ async function saveCalendar() {
 
 async function loadCalendar(event) {
     changesMade = false; // Reset changes flag
+    calendarLoaded = true; // Mark calendar as loaded
+    document.getElementById('merge-button').disabled = false; // Enable merge button
     document.getElementById('notification').style.display = 'none'; // Hide notification
 
     const fileInput = event.target;
@@ -256,6 +261,8 @@ function getItemStyle(type) {
             return 'background-color: #fff3cd; color: #856404;';
         case 'holiday':
             return 'background-color: #ffcccc; color: #721c24;';
+        case 'holiday-reason':
+            return 'background-color: #ffcccc; color: #721c24;';
         case 'link':
             return 'background-color: #cce5ff; color: #004085;';
         case 'personal-note':
@@ -272,10 +279,12 @@ function copyWeek(currentDate) {
     const startIndex = days.findIndex(day => day.id === `day-${currentDate.toISOString().split('T')[0]}`);
     const weekDays = days.slice(startIndex - 4, startIndex + 1); // Adjust this to select the desired week
 
-    let weekHTML = '<div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px;">';
+    let weekHTML = '<div class="calendar" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 94%;">';
 
     weekDays.forEach(day => {
-        const dayHTML = day.outerHTML.replace(/class="day"/, `style="${dayStyle(day)}"`);
+        const dayStyleString = dayStyle(day); // Generate the style string
+        const dayHTML = day.outerHTML.replace(/class="day holiday"/, `class="day holiday" style="${dayStyleString}"`)
+                                     .replace(/class="day"/, `class="day" style="${dayStyleString}"`);
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = dayHTML;
         const dayElement = tempDiv.firstChild;
@@ -297,11 +306,13 @@ function copyWeek(currentDate) {
 
 function dayStyle(day) {
     const styles = window.getComputedStyle(day);
+    const isHoliday = day.classList.contains('holiday');
     return `
         padding: ${styles.padding};
         border: ${styles.border};
         border-radius: ${styles.borderRadius};
-        background-color: ${styles.backgroundColor};
+        background-color: ${isHoliday ? '#ffcccc' : styles.backgroundColor};
+        color: ${isHoliday ? '#721c24' : styles.color};
         min-height: ${styles.minHeight};
         cursor: ${styles.cursor};
         word-wrap: ${styles.wordWrap};
@@ -315,4 +326,54 @@ function copyToClipboard(text) {
     textarea.select();
     document.execCommand('copy');
     document.body.removeChild(textarea);
+}
+
+async function mergeCalendar(event) {
+    const fileInput = event.target;
+    const file = fileInput.files[0];
+    if (!file) {
+        // Exit the function if no file was selected
+        return;
+    }
+
+    console.log('Selected file for merging:', file.name);
+
+    const reader = new FileReader();
+    reader.onload = function(e) {
+        const oldCalendarData = JSON.parse(e.target.result);
+        const calendar = document.getElementById('calendar');
+        const days = Array.from(calendar.querySelectorAll('.day'));
+
+        let oldDataIndex = 0;
+
+        days.forEach(dayDiv => {
+            if (!dayDiv.classList.contains('holiday')) {
+                while (oldDataIndex < oldCalendarData.data.length) {
+                    const oldDayData = oldCalendarData.data[oldDataIndex];
+                    if (oldDayData.items.some(item => item.type === 'holiday-reason')) {
+                        oldDataIndex++;
+                        continue; // Skip days with "holiday-reason"
+                    }
+                    mergeDayItems(dayDiv, oldDayData.items);
+                    oldDataIndex++;
+                    break;
+                }
+            }
+        });
+
+        markChanges(); // Mark changes after merging
+    };
+    reader.readAsText(file);
+}
+
+function mergeDayItems(dayDiv, newItems) {
+    newItems.forEach(newItemData => {
+        const item = document.createElement('p');
+        item.className = newItemData.type;
+        item.innerHTML = newItemData.text; // Use innerHTML to preserve hyperlinks
+        item.addEventListener('click', (e) => editItem(e, item));
+        item.style = getItemStyle(newItemData.type); // Apply inline styles
+        dayDiv.appendChild(item);
+    });
+    sortItems(dayDiv); // Sort items after merging
 }
