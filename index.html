@@ -19,15 +19,21 @@
 <body>
     <div class="calendar-container">
         <div class="input-group">
-            <input type="text" id="calendar-title" placeholder="Calendar Title">
-            <input type="date" id="start-date" placeholder="Start Date">
-            <input type="date" id="end-date" placeholder="End Date">
-            <button onclick="generateCalendar()">Generate Calendar</button>
+            <div class="input-subgroup">
+                <input type="text" id="calendar-title" placeholder="Calendar Title">
+                <input type="date" id="start-date" placeholder="Start Date">
+                <input type="date" id="end-date" placeholder="End Date">
+                <button onclick="generateCalendar()">Generate Calendar</button>
+            </div>
             <div class="separator"></div>
-            <button onclick="saveCalendar()">Save Calendar</button>
-            <button onclick="document.getElementById('load-calendar').click()">Load Calendar</button>
+            <div class="input-subgroup">
+                <button onclick="saveCalendar()">Save Calendar</button>
+                <button onclick="document.getElementById('load-calendar').click()">Load Calendar</button>
+                <button id="merge-button" onclick="document.getElementById('merge-calendar').click()" disabled>Merge Calendar</button>
+            </div>
         </div>
         <input type="file" id="load-calendar" onchange="loadCalendar(event)" style="display: none;">
+        <input type="file" id="merge-calendar" onchange="mergeCalendar(event)" style="display: none;">
         <div id="notification" class="notification" style="display: none;">Changes have been made. Remember to save.</div>
         <div id="calendar"></div>
     </div>
