@@ -1,0 +1,510 @@
+{
+  "title": "Sample 26W",
+  "data": [
+    {
+      "date": "2026-02-02",
+      "items": []
+    },
+    {
+      "date": "2026-02-03",
+      "items": []
+    },
+    {
+      "date": "2026-02-04",
+      "items": []
+    },
+    {
+      "date": "2026-02-05",
+      "items": []
+    },
+    {
+      "date": "2026-02-06",
+      "items": []
+    },
+    {
+      "date": "2026-02-09",
+      "items": []
+    },
+    {
+      "date": "2026-02-10",
+      "items": []
+    },
+    {
+      "date": "2026-02-11",
+      "items": []
+    },
+    {
+      "date": "2026-02-12",
+      "items": []
+    },
+    {
+      "date": "2026-02-13",
+      "items": []
+    },
+    {
+      "date": "2026-02-16",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Family Day"
+        }
+      ]
+    },
+    {
+      "date": "2026-02-17",
+      "items": []
+    },
+    {
+      "date": "2026-02-18",
+      "items": []
+    },
+    {
+      "date": "2026-02-19",
+      "items": []
+    },
+    {
+      "date": "2026-02-20",
+      "items": []
+    },
+    {
+      "date": "2026-02-23",
+      "items": []
+    },
+    {
+      "date": "2026-02-24",
+      "items": []
+    },
+    {
+      "date": "2026-02-25",
+      "items": []
+    },
+    {
+      "date": "2026-02-26",
+      "items": []
+    },
+    {
+      "date": "2026-02-27",
+      "items": []
+    },
+    {
+      "date": "2026-03-02",
+      "items": []
+    },
+    {
+      "date": "2026-03-03",
+      "items": []
+    },
+    {
+      "date": "2026-03-04",
+      "items": []
+    },
+    {
+      "date": "2026-03-05",
+      "items": []
+    },
+    {
+      "date": "2026-03-06",
+      "items": []
+    },
+    {
+      "date": "2026-03-09",
+      "items": []
+    },
+    {
+      "date": "2026-03-10",
+      "items": []
+    },
+    {
+      "date": "2026-03-11",
+      "items": []
+    },
+    {
+      "date": "2026-03-12",
+      "items": []
+    },
+    {
+      "date": "2026-03-13",
+      "items": []
+    },
+    {
+      "date": "2026-03-16",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "March Break"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-17",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "March Break"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-18",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "March Break"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-19",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "March Break"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-20",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "March Break"
+        }
+      ]
+    },
+    {
+      "date": "2026-03-23",
+      "items": []
+    },
+    {
+      "date": "2026-03-24",
+      "items": []
+    },
+    {
+      "date": "2026-03-25",
+      "items": []
+    },
+    {
+      "date": "2026-03-26",
+      "items": []
+    },
+    {
+      "date": "2026-03-27",
+      "items": []
+    },
+    {
+      "date": "2026-03-30",
+      "items": []
+    },
+    {
+      "date": "2026-03-31",
+      "items": []
+    },
+    {
+      "date": "2026-04-01",
+      "items": []
+    },
+    {
+      "date": "2026-04-02",
+      "items": []
+    },
+    {
+      "date": "2026-04-03",
+      "items": []
+    },
+    {
+      "date": "2026-04-06",
+      "items": []
+    },
+    {
+      "date": "2026-04-07",
+      "items": []
+    },
+    {
+      "date": "2026-04-08",
+      "items": []
+    },
+    {
+      "date": "2026-04-09",
+      "items": []
+    },
+    {
+      "date": "2026-04-10",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "PA Day"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-13",
+      "items": []
+    },
+    {
+      "date": "2026-04-14",
+      "items": []
+    },
+    {
+      "date": "2026-04-15",
+      "items": []
+    },
+    {
+      "date": "2026-04-16",
+      "items": []
+    },
+    {
+      "date": "2026-04-17",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Good Friday"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-20",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Easter Monday"
+        }
+      ]
+    },
+    {
+      "date": "2026-04-21",
+      "items": []
+    },
+    {
+      "date": "2026-04-22",
+      "items": []
+    },
+    {
+      "date": "2026-04-23",
+      "items": []
+    },
+    {
+      "date": "2026-04-24",
+      "items": []
+    },
+    {
+      "date": "2026-04-27",
+      "items": []
+    },
+    {
+      "date": "2026-04-28",
+      "items": []
+    },
+    {
+      "date": "2026-04-29",
+      "items": []
+    },
+    {
+      "date": "2026-04-30",
+      "items": []
+    },
+    {
+      "date": "2026-05-01",
+      "items": []
+    },
+    {
+      "date": "2026-05-04",
+      "items": []
+    },
+    {
+      "date": "2026-05-05",
+      "items": []
+    },
+    {
+      "date": "2026-05-06",
+      "items": []
+    },
+    {
+      "date": "2026-05-07",
+      "items": []
+    },
+    {
+      "date": "2026-05-08",
+      "items": []
+    },
+    {
+      "date": "2026-05-11",
+      "items": []
+    },
+    {
+      "date": "2026-05-12",
+      "items": []
+    },
+    {
+      "date": "2026-05-13",
+      "items": []
+    },
+    {
+      "date": "2026-05-14",
+      "items": []
+    },
+    {
+      "date": "2026-05-15",
+      "items": []
+    },
+    {
+      "date": "2026-05-18",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Victoria Day"
+        }
+      ]
+    },
+    {
+      "date": "2026-05-19",
+      "items": []
+    },
+    {
+      "date": "2026-05-20",
+      "items": []
+    },
+    {
+      "date": "2026-05-21",
+      "items": []
+    },
+    {
+      "date": "2026-05-22",
+      "items": []
+    },
+    {
+      "date": "2026-05-25",
+      "items": []
+    },
+    {
+      "date": "2026-05-26",
+      "items": []
+    },
+    {
+      "date": "2026-05-27",
+      "items": []
+    },
+    {
+      "date": "2026-05-28",
+      "items": []
+    },
+    {
+      "date": "2026-05-29",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "PA Day"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-01",
+      "items": []
+    },
+    {
+      "date": "2026-06-02",
+      "items": []
+    },
+    {
+      "date": "2026-06-03",
+      "items": []
+    },
+    {
+      "date": "2026-06-04",
+      "items": []
+    },
+    {
+      "date": "2026-06-05",
+      "items": []
+    },
+    {
+      "date": "2026-06-08",
+      "items": []
+    },
+    {
+      "date": "2026-06-09",
+      "items": []
+    },
+    {
+      "date": "2026-06-10",
+      "items": []
+    },
+    {
+      "date": "2026-06-11",
+      "items": []
+    },
+    {
+      "date": "2026-06-12",
+      "items": []
+    },
+    {
+      "date": "2026-06-15",
+      "items": []
+    },
+    {
+      "date": "2026-06-16",
+      "items": []
+    },
+    {
+      "date": "2026-06-17",
+      "items": []
+    },
+    {
+      "date": "2026-06-18",
+      "items": []
+    },
+    {
+      "date": "2026-06-19",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Exams"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-22",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Exams"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-23",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Exams"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-24",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Exams"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-25",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "Exams"
+        }
+      ]
+    },
+    {
+      "date": "2026-06-26",
+      "items": [
+        {
+          "type": "holiday-reason",
+          "text": "PA Day"
+        }
+      ]
+    }
+  ]
+}
