@@ -201,3 +201,8 @@ button:disabled {
         align-items: center; /* Center inputs and buttons */
     }
 }
+
+.drag-handle {
+    cursor: grab;
+    margin-right: 5px;
+}

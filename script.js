@@ -21,10 +21,8 @@ function generateCalendar() {
     const endDate = new Date(document.getElementById('end-date').value);
     const calendar = document.getElementById('calendar');
     calendar.innerHTML = '';
-
     let currentDate = new Date(startDate.getTime() + startDate.getTimezoneOffset() * 60000); // Normalize the start date
     const normalizedEndDate = new Date(endDate.getTime() + endDate.getTimezoneOffset() * 60000); // Normalize the end date
-
     while (currentDate <= normalizedEndDate) {
         if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) { // Skip weekends
             const dayDiv = document.createElement('div');
@@ -35,7 +33,6 @@ function generateCalendar() {
             dayDiv.innerHTML = `<strong>${currentDate.toLocaleDateString(undefined, options)}</strong>`;
             dayDiv.addEventListener('click', () => handleDayClick(dayDiv));
             calendar.appendChild(dayDiv);
-
             // Add copy button for each week
             if (currentDate.getDay() === 5) { // Friday
                 const copyButton = document.createElement('button');
@@ -52,9 +49,7 @@ function generateCalendar() {
 function handleDayClick(dayDiv) {
     const action = prompt("Select action:\n1: Content\n2: Eval\n3: Link\n4: Homework\n5: Personal Note\n6: Personal Link\n7: Holiday");
     if (action === null) return; // Exit if the user presses cancel
-
     let actionType;
-
     switch (action) {
         case '1':
             actionType = 'content';
@@ -81,7 +76,6 @@ function handleDayClick(dayDiv) {
             alert("Invalid selection. Please enter a number between 1 and 7.");
             return;
     }
-
     if (actionType === 'holiday') {
         if (dayDiv.classList.contains('holiday')) {
             dayDiv.classList.remove('holiday');
@@ -104,20 +98,43 @@ function handleDayClick(dayDiv) {
             item.className = actionType;
             item.innerHTML = `<a href="${url}" target="_blank">${linkText}</a>`;
             item.addEventListener('click', (e) => editItem(e, item));
+            item.draggable = true; // Make item draggable
+            item.id = `item-${Date.now()}`; // Assign a unique id
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragover', handleDragOver);
+            item.addEventListener('drop', handleDrop);
+            const dragHandle = document.createElement('span');
+            dragHandle.className = 'drag-handle';
+            dragHandle.innerHTML = '⇅'; // Drag handle icon
+            dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+            dragHandle.addEventListener('dragstart', handleDragStart);
+            item.prepend(dragHandle);
             dayDiv.appendChild(item);
             markChanges(); // Mark changes
         }
     } else {
-        const itemText = prompt("Enter item text (use <a href='URL'>link text</a> for hyperlinks):");
+        const itemText = prompt("Enter item text");
         if (itemText) {
             const item = document.createElement('p');
             item.className = actionType;
             item.innerHTML = itemText; // Allow HTML input for hyperlinks
             item.addEventListener('click', (e) => editItem(e, item));
+            item.draggable = true; // Make item draggable
+            item.id = `item-${Date.now()}`; // Assign a unique id
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragover', handleDragOver);
+            item.addEventListener('drop', handleDrop);
+            const dragHandle = document.createElement('span');
+            dragHandle.className = 'drag-handle';
+            dragHandle.innerHTML = '⇅'; // Drag handle icon
+            dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+            dragHandle.addEventListener('dragstart', handleDragStart);
+            item.prepend(dragHandle);
             dayDiv.appendChild(item);
             markChanges(); // Mark changes
         }
     }
+    sortItems(dayDiv);
 }
 
 function editItem(event, item) {
@@ -125,17 +142,16 @@ function editItem(event, item) {
     if (event.target.tagName.toLowerCase() === 'a') {
         return; // Do not trigger edit if the link text is clicked
     }
+    if (item.className == "link" || item.className == "personal-link") {
+        editLink(item);
+    } else {
+        editContent(item)
+    }
+}
 
+function editContent(item) {
     const newText = prompt("Edit item text:", item.textContent);
     if (newText === null) return; // Exit if the user presses cancel
-
-    if (item.className === 'link' || item.className === 'personal-link') {
-        const newUrl = prompt("Edit URL:", item.querySelector('a').href);
-        if (newUrl !== null) {
-            item.querySelector('a').href = newUrl;
-        }
-    }
-
     if (newText.trim() === "") {
         item.remove(); // Remove the item if the new text is empty
         markChanges(); // Mark changes
@@ -144,6 +160,31 @@ function editItem(event, item) {
         sortItems(item.parentElement);
         markChanges(); // Mark changes
     }
+}
+
+function editLink(item) {
+    const newText = prompt("Edit item text:", item.textContent);
+    if (newText === null) return; // Exit if the user presses cancel
+    if (newText.trim() === "") {
+        item.remove(); // Remove the item if the new text is empty
+        markChanges(); // Mark changes
+        return;
+    } else {
+        item.querySelector('a').innerHTML = newText;
+    }
+    const newUrl = prompt("Edit URL:", item.querySelector('a').href);
+    if (newUrl === null) {
+        return;
+    } // Exit if the user presses cancel
+    else if (newUrl.trim === "") {
+        item.remove(); // Remove the item if the new text is empty
+        markChanges(); // Mark changes
+        return;
+    } else {
+        item.querySelector('a').href = newUrl;
+    }
+    sortItems(item.parentElement);
+    markChanges(); // Mark changes
 }
 
 function sortItems(dayDiv) {
@@ -200,16 +241,13 @@ async function loadCalendar(event) {
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
     document.getElementById('notification').style.display = 'none'; // Hide notification
-
     const fileInput = event.target;
     const file = fileInput.files[0];
     if (!file) {
         // Exit the function if no file was selected
         return;
     }
-
     console.log('Selected file:', file.name);
-
     const reader = new FileReader();
     reader.onload = function(e) {
         const calendarData = JSON.parse(e.target.result);
@@ -229,7 +267,18 @@ async function loadCalendar(event) {
                 item.className = itemData.type;
                 item.innerHTML = itemData.text; // Use innerHTML to preserve hyperlinks
                 item.addEventListener('click', (e) => editItem(e, item));
+                item.draggable = true; // Make item draggable
+                item.id = `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`; // Assign a unique id
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
                 item.style = getItemStyle(itemData.type); // Apply inline styles
+                const dragHandle = document.createElement('span');
+                dragHandle.className = 'drag-handle';
+                dragHandle.innerHTML = '⇅'; // Drag handle icon
+                dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+                dragHandle.addEventListener('dragstart', handleDragStart);
+                item.prepend(dragHandle);
                 dayDiv.appendChild(item);
             });
             if (dayData.items.some(item => item.type === 'holiday-reason')) {
@@ -237,7 +286,6 @@ async function loadCalendar(event) {
             }
             dayDiv.addEventListener('click', () => handleDayClick(dayDiv));
             calendar.appendChild(dayDiv);
-
             // Add copy button for each week
             if ((index + 1) % 5 === 0) { // After every 5 days
                 const copyButton = document.createElement('button');
@@ -278,13 +326,11 @@ function copyWeek(currentDate) {
     const days = Array.from(calendar.querySelectorAll('.day'));
     const startIndex = days.findIndex(day => day.id === `day-${currentDate.toISOString().split('T')[0]}`);
     const weekDays = days.slice(startIndex - 4, startIndex + 1); // Adjust this to select the desired week
-
     let weekHTML = '<div class="calendar" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 94%;">';
-
     weekDays.forEach(day => {
         const dayStyleString = dayStyle(day); // Generate the style string
         const dayHTML = day.outerHTML.replace(/class="day holiday"/, `class="day holiday" style="${dayStyleString}"`)
-                                     .replace(/class="day"/, `class="day" style="${dayStyleString}"`);
+            .replace(/class="day"/, `class="day" style="${dayStyleString}"`);
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = dayHTML;
         const dayElement = tempDiv.firstChild;
@@ -294,12 +340,15 @@ function copyWeek(currentDate) {
             } else {
                 p.remove(); // Remove personal notes and links
             }
+            // Remove drag handles
+            const dragHandle = p.querySelector('.drag-handle');
+            if (dragHandle) {
+                dragHandle.remove();
+            }
         });
         weekHTML += tempDiv.innerHTML;
     });
-
     weekHTML += '</div>';
-
     copyToClipboard(weekHTML);
     alert('Week copied to clipboard!');
 }
@@ -335,17 +384,13 @@ async function mergeCalendar(event) {
         // Exit the function if no file was selected
         return;
     }
-
     console.log('Selected file for merging:', file.name);
-
     const reader = new FileReader();
     reader.onload = function(e) {
         const oldCalendarData = JSON.parse(e.target.result);
         const calendar = document.getElementById('calendar');
         const days = Array.from(calendar.querySelectorAll('.day'));
-
         let oldDataIndex = 0;
-
         days.forEach(dayDiv => {
             if (!dayDiv.classList.contains('holiday')) {
                 while (oldDataIndex < oldCalendarData.data.length) {
@@ -360,7 +405,6 @@ async function mergeCalendar(event) {
                 }
             }
         });
-
         markChanges(); // Mark changes after merging
     };
     reader.readAsText(file);
@@ -372,8 +416,69 @@ function mergeDayItems(dayDiv, newItems) {
         item.className = newItemData.type;
         item.innerHTML = newItemData.text; // Use innerHTML to preserve hyperlinks
         item.addEventListener('click', (e) => editItem(e, item));
+        item.draggable = true; // Make item draggable
+        item.id = `item-${Date.now()}`; // Assign a unique id
+        item.addEventListener('dragstart', handleDragStart);
+        item.addEventListener('dragover', handleDragOver);
+        item.addEventListener('drop', handleDrop);
         item.style = getItemStyle(newItemData.type); // Apply inline styles
+        const dragHandle = document.createElement('span');
+        dragHandle.className = 'drag-handle';
+        dragHandle.innerHTML = '⇅'; // Drag handle icon
+        dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+        dragHandle.addEventListener('dragstart', handleDragStart);
+        item.prepend(dragHandle);
         dayDiv.appendChild(item);
     });
     sortItems(dayDiv); // Sort items after merging
+}
+
+function handleDragStart(event) {
+    event.dataTransfer.setData('text/plain', event.target.id);
+    event.dataTransfer.effectAllowed = 'move';
+}
+
+function handleDragOver(event) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+}
+
+function handleDrop(event) {
+    event.preventDefault();
+    const id = event.dataTransfer.getData('text/plain');
+    const draggableElement = document.getElementById(id);
+    const dropzone = event.target.closest('.day');
+    if (dropzone && dropzone !== draggableElement.parentElement) {
+        const items = Array.from(dropzone.querySelectorAll('p'));
+        let insertBeforeElement = null;
+        for (let i = 0; i < items.length; i++) {
+            const rect = items[i].getBoundingClientRect();
+            if (event.clientY < rect.top + rect.height / 2) {
+                insertBeforeElement = items[i];
+                break;
+            }
+        }
+        if (insertBeforeElement) {
+            dropzone.insertBefore(draggableElement, insertBeforeElement);
+        } else {
+            dropzone.appendChild(draggableElement);
+        }
+        markChanges(); // Mark changes
+    } else if (dropzone) {
+        const items = Array.from(dropzone.querySelectorAll('p'));
+        let insertBeforeElement = null;
+        for (let i = 0; i < items.length; i++) {
+            const rect = items[i].getBoundingClientRect();
+            if (event.clientY < rect.top + rect.height / 2) {
+                insertBeforeElement = items[i];
+                break;
+            }
+        }
+        if (insertBeforeElement) {
+            dropzone.insertBefore(draggableElement, insertBeforeElement);
+        } else {
+            dropzone.appendChild(draggableElement);
+        }
+        markChanges(); // Mark changes
+    }
 }
