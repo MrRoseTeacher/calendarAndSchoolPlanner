@@ -25,10 +25,7 @@ function generateCalendar() {
     const normalizedEndDate = new Date(endDate.getTime() + endDate.getTimezoneOffset() * 60000); // Normalize the end date
     while (currentDate <= normalizedEndDate) {
         if (currentDate.getDay() !== 0 && currentDate.getDay() !== 6) { // Skip weekends
-            const dayDiv = document.createElement('div');
-            dayDiv.className = 'day';
-            const dateString = currentDate.toISOString().split('T')[0];
-            dayDiv.id = `day-${dateString}`;
+            const dayDiv = createDayElement(currentDate.toISOString().split('T')[0]);
             const options = { month: 'short', day: 'numeric' }; // Format options without the year
             dayDiv.innerHTML = `<strong>${currentDate.toLocaleDateString(undefined, options)}</strong>`;
             dayDiv.addEventListener('click', () => handleDayClick(dayDiv));
@@ -202,23 +199,25 @@ async function saveCalendar() {
         alert("Please enter a calendar title.");
         return;
     }
-
-    // Replace spaces and special characters in the title to create a valid filename
     const safeTitle = calendarTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-
     const calendar = document.getElementById('calendar');
     const days = Array.from(calendar.querySelectorAll('.day'));
     const calendarData = days.map(day => {
-        const date = day.id.split('day-')[1]; // Correctly extract the full date
-        const items = Array.from(day.querySelectorAll('p')).map(item => ({
-            type: item.className,
-            text: item.innerHTML // Save innerHTML to preserve hyperlinks
-        }));
+        const date = day.id.split('day-')[1];
+        const items = Array.from(day.querySelectorAll('p')).map(item => {
+            const itemClone = item.cloneNode(true);
+            const dragHandle = itemClone.querySelector('.drag-handle');
+            if (dragHandle) {
+                dragHandle.remove(); // Remove drag handle
+            }
+            return {
+                type: item.className,
+                text: itemClone.innerHTML // Save innerHTML to preserve hyperlinks
+            };
+        });
         return { date, items };
     });
-
     const json = JSON.stringify({ title: calendarTitle, data: calendarData });
-
     try {
         const response = await fetch('http://localhost:3000/save', {
             method: 'POST',
@@ -244,8 +243,7 @@ async function loadCalendar(event) {
     const fileInput = event.target;
     const file = fileInput.files[0];
     if (!file) {
-        // Exit the function if no file was selected
-        return;
+        return; // Exit the function if no file was selected
     }
     console.log('Selected file:', file.name);
     const reader = new FileReader();
@@ -255,9 +253,7 @@ async function loadCalendar(event) {
         const calendar = document.getElementById('calendar');
         calendar.innerHTML = '';
         calendarData.data.forEach((dayData, index) => {
-            const dayDiv = document.createElement('div');
-            dayDiv.className = 'day';
-            dayDiv.id = `day-${dayData.date}`;
+            const dayDiv = createDayElement(dayData.date);
             const options = { month: 'short', day: 'numeric' };
             const dateParts = dayData.date.split('-');
             const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
@@ -273,12 +269,14 @@ async function loadCalendar(event) {
                 item.addEventListener('dragover', handleDragOver);
                 item.addEventListener('drop', handleDrop);
                 item.style = getItemStyle(itemData.type); // Apply inline styles
-                const dragHandle = document.createElement('span');
-                dragHandle.className = 'drag-handle';
-                dragHandle.innerHTML = '⇅'; // Drag handle icon
-                dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
-                dragHandle.addEventListener('dragstart', handleDragStart);
-                item.prepend(dragHandle);
+                if (itemData.type !== 'holiday-reason') {
+                    const dragHandle = document.createElement('span');
+                    dragHandle.className = 'drag-handle';
+                    dragHandle.innerHTML = '⇅'; // Drag handle icon
+                    dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+                    dragHandle.addEventListener('dragstart', handleDragStart);
+                    item.prepend(dragHandle);
+                }
                 dayDiv.appendChild(item);
             });
             if (dayData.items.some(item => item.type === 'holiday-reason')) {
@@ -286,7 +284,6 @@ async function loadCalendar(event) {
             }
             dayDiv.addEventListener('click', () => handleDayClick(dayDiv));
             calendar.appendChild(dayDiv);
-            // Add copy button for each week
             if ((index + 1) % 5 === 0) { // After every 5 days
                 const copyButton = document.createElement('button');
                 copyButton.innerHTML = '<span class="material-symbols-outlined">content_copy</span>'; // Material Symbols icon
@@ -438,33 +435,12 @@ function handleDragStart(event) {
     event.dataTransfer.effectAllowed = 'move';
 }
 
-function handleDragOver(event) {
-    event.preventDefault();
-    event.dataTransfer.dropEffect = 'move';
-}
-
 function handleDrop(event) {
     event.preventDefault();
     const id = event.dataTransfer.getData('text/plain');
     const draggableElement = document.getElementById(id);
     const dropzone = event.target.closest('.day');
-    if (dropzone && dropzone !== draggableElement.parentElement) {
-        const items = Array.from(dropzone.querySelectorAll('p'));
-        let insertBeforeElement = null;
-        for (let i = 0; i < items.length; i++) {
-            const rect = items[i].getBoundingClientRect();
-            if (event.clientY < rect.top + rect.height / 2) {
-                insertBeforeElement = items[i];
-                break;
-            }
-        }
-        if (insertBeforeElement) {
-            dropzone.insertBefore(draggableElement, insertBeforeElement);
-        } else {
-            dropzone.appendChild(draggableElement);
-        }
-        markChanges(); // Mark changes
-    } else if (dropzone) {
+    if (dropzone) {
         const items = Array.from(dropzone.querySelectorAll('p'));
         let insertBeforeElement = null;
         for (let i = 0; i < items.length; i++) {
@@ -482,3 +458,34 @@ function handleDrop(event) {
         markChanges(); // Mark changes
     }
 }
+
+function handleDragOver(event) {
+    event.preventDefault();
+    event.dataTransfer.dropEffect = 'move';
+    const dropzone = event.target.closest('.day');
+    if (dropzone) {
+        dropzone.classList.add('drag-over');
+    }
+}
+
+function handleDragLeave(event) {
+    const dropzone = event.target.closest('.day');
+    if (dropzone) {
+        dropzone.classList.remove('drag-over');
+    }
+}
+
+function createDayElement(date) {
+    const dayDiv = document.createElement('div');
+    dayDiv.className = 'day';
+    dayDiv.id = `day-${date}`;
+    addDragAndDropListeners(dayDiv);
+    return dayDiv;
+}
+
+function addDragAndDropListeners(dayDiv) {
+    dayDiv.addEventListener('dragover', handleDragOver);
+    dayDiv.addEventListener('dragleave', handleDragLeave);
+    dayDiv.addEventListener('drop', handleDrop);
+}
+
