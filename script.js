@@ -28,6 +28,15 @@ function generateCalendar() {
             const dayDiv = createDayElement(currentDate.toISOString().split('T')[0]);
             const options = { month: 'short', day: 'numeric' }; // Format options without the year
             dayDiv.innerHTML = `<strong>${currentDate.toLocaleDateString(undefined, options)}</strong>`;
+            const sortIcon = document.createElement('span');
+            sortIcon.innerHTML = '⤨'; // Sort icon
+            sortIcon.className = 'sort-icon';
+            sortIcon.style = 'cursor: pointer; margin-left: 5px;';
+            sortIcon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Stop event propagation
+                sortItems(dayDiv);
+            });
+            dayDiv.appendChild(sortIcon);
             dayDiv.addEventListener('click', () => handleDayClick(dayDiv));
             calendar.appendChild(dayDiv);
             // Add copy button for each week
@@ -147,40 +156,49 @@ function editItem(event, item) {
 }
 
 function editContent(item) {
-    const newText = prompt("Edit item text:", item.textContent);
+    const dragHandle = item.querySelector('.drag-handle');
+    const textContent = dragHandle ? item.textContent.replace(dragHandle.textContent, '').trim() : item.textContent.trim();
+    const newText = prompt("Edit item text:", textContent);
     if (newText === null) return; // Exit if the user presses cancel
     if (newText.trim() === "") {
         item.remove(); // Remove the item if the new text is empty
         markChanges(); // Mark changes
     } else {
         item.innerHTML = newText;
-        sortItems(item.parentElement);
+        if (dragHandle) {
+            item.prepend(dragHandle); // Re-add the drag handle
+        }
         markChanges(); // Mark changes
     }
 }
 
 function editLink(item) {
-    const newText = prompt("Edit item text:", item.textContent);
+    const dragHandle = item.querySelector('.drag-handle');
+    const linkElement = item.querySelector('a');
+    const linkText = dragHandle ? linkElement.textContent.replace(dragHandle.textContent, '').trim() : linkElement.textContent.trim();
+    const newText = prompt("Edit item text:", linkText);
     if (newText === null) return; // Exit if the user presses cancel
     if (newText.trim() === "") {
         item.remove(); // Remove the item if the new text is empty
         markChanges(); // Mark changes
         return;
     } else {
-        item.querySelector('a').innerHTML = newText;
+        linkElement.textContent = newText;
     }
-    const newUrl = prompt("Edit URL:", item.querySelector('a').href);
+    const newUrl = prompt("Edit URL:", linkElement.href);
     if (newUrl === null) {
         return;
     } // Exit if the user presses cancel
-    else if (newUrl.trim === "") {
+    else if (newUrl.trim() === "") {
         item.remove(); // Remove the item if the new text is empty
         markChanges(); // Mark changes
         return;
     } else {
-        item.querySelector('a').href = newUrl;
+        linkElement.href = newUrl;
     }
-    sortItems(item.parentElement);
+    if (dragHandle) {
+        item.prepend(dragHandle); // Re-add the drag handle
+    }
     markChanges(); // Mark changes
 }
 
@@ -258,6 +276,15 @@ async function loadCalendar(event) {
             const dateParts = dayData.date.split('-');
             const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
             dayDiv.innerHTML = `<strong>${date.toLocaleDateString(undefined, options)}</strong>`;
+            const sortIcon = document.createElement('span');
+            sortIcon.innerHTML = '⤨'; // Sort icon
+            sortIcon.className = 'sort-icon';
+            sortIcon.style = 'cursor: pointer; margin-left: 5px;';
+            sortIcon.addEventListener('click', (e) => {
+                e.stopPropagation(); // Stop event propagation
+                sortItems(dayDiv);
+            });
+            dayDiv.appendChild(sortIcon);
             dayData.items.forEach(itemData => {
                 const item = document.createElement('p');
                 item.className = itemData.type;
