@@ -1,21 +1,13 @@
 {
-    "rewrites": [
-      { "source": "/(.*)", "destination": "/" }
-    ],
-    "builds": [
-      {
-        "src": "server.js",
-        "use": "@vercel/node"
-      }
-    ],
-    "routes": [
-      {
-        "src": "/api/save",
-        "dest": "/api/save"
-      },
-      {
-        "src": "/api/load",
-        "dest": "/api/load"
-      }
-    ]
-  }
+  "rewrites": [
+    { "source": "/api/save", "destination": "/api/save" },
+    { "source": "/api/load", "destination": "/api/load" },
+    { "source": "/(.*)", "destination": "/" }
+  ],
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/node"
+    }
+  ]
+}
