@@ -236,7 +236,7 @@ async function saveCalendar() {
     });
     const json = JSON.stringify({ title: calendarTitle, data: calendarData });
     try {
-        const response = await fetch('http://localhost:3000/save', {
+        const response = await fetch('/save', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
