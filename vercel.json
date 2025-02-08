@@ -1,0 +1,21 @@
+{
+    "rewrites": [
+      { "source": "/(.*)", "destination": "/" }
+    ],
+    "builds": [
+      {
+        "src": "server.js",
+        "use": "@vercel/node"
+      }
+    ],
+    "routes": [
+      {
+        "src": "/api/save",
+        "dest": "/api/save"
+      },
+      {
+        "src": "/api/load",
+        "dest": "/api/load"
+      }
+    ]
+  }

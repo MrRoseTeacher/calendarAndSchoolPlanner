@@ -1,15 +1,10 @@
 const express = require('express');
 const fs = require('fs');
 const path = require('path');
+const { Blob } = require('@vercel/blob');
+const multer = require('multer');
 const app = express();
-const PORT = 3000;
-
-// Log the current working directory
-console.log('Current working directory:', process.cwd());
-
-// Define the default save directory
-const SAVE_DIR = path.join(__dirname, 'schedules');
-console.log('Save directory:', SAVE_DIR);
+const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -17,47 +12,53 @@ app.use(express.json());
 // Serve static files (CSS, JS)
 app.use(express.static(path.join(__dirname)));
 
-// Route for the root URL to serve index.html
-app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'index.html'));
-});
+// Initialize multer for file uploads
+const upload = multer({ dest: 'uploads/' });
 
-// Endpoint to save JSON data
-app.post('/save', (req, res) => {
+// Endpoint to save JSON data to Vercel Blob
+app.post('/api/save', upload.single('file'), async (req, res) => {
     const data = req.body;
     const fileName = `${data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
-    const filePath = path.join(SAVE_DIR, fileName);
+    const filePath = path.join(__dirname, 'uploads', fileName);
 
-    // Ensure the directory exists
-    fs.mkdirSync(SAVE_DIR, { recursive: true });
-
-    // Write the JSON data to the file
-    fs.writeFile(filePath, JSON.stringify(data, null, 2), (err) => {
+    // Write the JSON data to a temporary file
+    fs.writeFile(filePath, JSON.stringify(data, null, 2), async (err) => {
         if (err) {
             console.error('Error saving file:', err);
             return res.status(500).send('Error saving file');
         }
-        console.log('File saved successfully:', filePath);
-        res.send('File saved successfully');
+        try {
+            // Upload the file to Vercel Blob
+            const blob = new Blob();
+            const result = await blob.upload(filePath, { name: fileName });
+            console.log('File uploaded to Vercel Blob with URL:', result.url);
+            res.send('File saved and uploaded to Vercel Blob successfully');
+        } catch (error) {
+            console.error('Error uploading file to Vercel Blob:', error);
+            res.status(500).send('Error uploading file to Vercel Blob');
+        } finally {
+            // Clean up the temporary file
+            fs.unlink(filePath, (err) => {
+                if (err) console.error('Error deleting temporary file:', err);
+            });
+        }
     });
 });
 
-// Endpoint to load JSON data
-app.get('/load', (req, res) => {
+// Endpoint to load JSON data from Vercel Blob
+app.get('/api/load', async (req, res) => {
     const fileName = req.query.filename;
     if (!fileName) {
         return res.status(400).send('Filename query parameter is required');
     }
-    const filePath = path.join(SAVE_DIR, fileName);
-    console.log('Loading file from path:', filePath);
-
-    fs.readFile(filePath, 'utf8', (err, data) => {
-        if (err) {
-            console.error('Error loading file:', err);
-            return res.status(500).send('Error loading file');
-        }
-        res.json(JSON.parse(data));
-    });
+    try {
+        const blob = new Blob();
+        const file = await blob.download(fileName);
+        res.json(JSON.parse(file.toString()));
+    } catch (error) {
+        console.error('Error loading file from Vercel Blob:', error);
+        res.status(500).send('Error loading file from Vercel Blob');
+    }
 });
 
 app.listen(PORT, () => {
