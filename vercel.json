@@ -10,11 +10,11 @@
     ],
     "routes": [
       {
-        "src": "/save",
+        "src": "/api/save",
         "dest": "/api/save"
       },
       {
-        "src": "/load",
+        "src": "/api/load",
         "dest": "/api/load"
       }
     ]
