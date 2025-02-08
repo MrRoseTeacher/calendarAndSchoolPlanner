@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const path = require('path');
 const { Blob } = require('@vercel/blob');
-const multer = require('multer'); // Ensure multer is required
+const multer = require('multer');
 const app = express();
 const PORT = process.env.PORT || 3000;
 
