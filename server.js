@@ -4,7 +4,7 @@ const path = require('path');
 const { Blob } = require('@vercel/blob');
 const multer = require('multer');
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Middleware to parse JSON bodies
 app.use(express.json());
@@ -16,7 +16,7 @@ app.use(express.static(path.join(__dirname)));
 const upload = multer({ dest: 'uploads/' });
 
 // Endpoint to save JSON data to Vercel Blob
-app.post('/save', upload.single('file'), async (req, res) => {
+app.post('/api/save', upload.single('file'), async (req, res) => {
     const data = req.body;
     const fileName = `${data.title.replace(/[^a-z0-9]/gi, '_').toLowerCase()}.json`;
     const filePath = path.join(__dirname, 'uploads', fileName);
@@ -46,7 +46,7 @@ app.post('/save', upload.single('file'), async (req, res) => {
 });
 
 // Endpoint to load JSON data from Vercel Blob
-app.get('/load', async (req, res) => {
+app.get('/api/load', async (req, res) => {
     const fileName = req.query.filename;
     if (!fileName) {
         return res.status(400).send('Filename query parameter is required');
