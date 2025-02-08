@@ -140,7 +140,6 @@ function handleDayClick(dayDiv) {
             markChanges(); // Mark changes
         }
     }
-    sortItems(dayDiv);
 }
 
 function editItem(event, item) {
@@ -370,6 +369,11 @@ function copyWeek(currentDate) {
                 dragHandle.remove();
             }
         });
+        // Remove sort icon
+        const sortIcon = dayElement.querySelector('.sort-icon');
+        if (sortIcon) {
+            sortIcon.remove();
+        }
         weekHTML += tempDiv.innerHTML;
     });
     weekHTML += '</div>';
