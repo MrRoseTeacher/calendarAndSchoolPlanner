@@ -225,7 +225,7 @@ async function saveCalendar() {
             const itemClone = item.cloneNode(true);
             const dragHandle = itemClone.querySelector('.drag-handle');
             if (dragHandle) {
-                dragHandle remove(); // Remove drag handle
+                dragHandle.remove(); // Remove drag handle
             }
             return {
                 type: item.className,
