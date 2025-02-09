@@ -287,6 +287,8 @@ async function saveCalendar() {
 
 async function loadCalendar(event) {
     event.stopPropagation(); // Prevent event propagation
+    event.preventDefault(); // Prevent default behavior
+
     changesMade = false; // Reset changes flag
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
