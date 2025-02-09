@@ -213,6 +213,7 @@ function sortItems(dayDiv) {
 }
 
 async function saveCalendar() {
+    console.log(0);
     const calendarTitle = document.getElementById('calendar-title').value.trim();
     if (!calendarTitle) {
         alert("Please enter a calendar title.");
@@ -261,6 +262,7 @@ async function saveCalendar() {
             console.log('Calendar saved successfully on local server:', result);
             // alert('Calendar saved successfully on local server!');
         } else {
+            console.log(1);
             if (!fileHandle || originalFileName !== newFileName) {
                 fileHandle = await window.showSaveFilePicker({
                     suggestedName: newFileName,
@@ -273,6 +275,7 @@ async function saveCalendar() {
                 });
                 originalFileName = newFileName;
             }
+            console.log(2);
             const writable = await fileHandle.createWritable();
             await writable.write(json);
             await writable.close();
