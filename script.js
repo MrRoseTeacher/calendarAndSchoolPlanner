@@ -309,6 +309,7 @@ async function loadCalendar(event) {
         };
         reader.readAsText(file);
     } else {
+        console.log(3);
         // Vercel: Load from Vercel Blob
         try {
             console.log(4);
