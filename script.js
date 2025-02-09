@@ -259,11 +259,7 @@ async function saveCalendar() {
             }
             const result = await response.json();
             console.log('Calendar saved successfully on local server:', result);
-            // alert('Calendar saved successfully on local server!');
         } else {
-            console.log('fileHandle:', fileHandle);
-            console.log('originalFileName:', originalFileName);
-            console.log('newFileName:', newFileName);
 
             if (!fileHandle || originalFileName !== newFileName) {
                 fileHandle = await window.showSaveFilePicker({
@@ -282,7 +278,6 @@ async function saveCalendar() {
             const writable = await fileHandle.createWritable();
             await writable.write(json);
             await writable.close();
-            alert('Calendar saved successfully in browser!');
         }
         changesMade = false; // Reset changes flag
         document.getElementById('notification').style.display = 'none'; // Hide notification
@@ -294,18 +289,15 @@ async function saveCalendar() {
 
 document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('load-button').addEventListener('click', async function() {
-        console.log(0);
         await loadCalendar();
     });
 
     document.getElementById('merge-button').addEventListener('click', async function() {
-        console.log(0);
         await mergeCalendar();
     });
 });
 
 async function loadCalendar() {
-    console.log(1);
 
     changesMade = false; // Reset changes flag
     calendarLoaded = true; // Mark calendar as loaded
@@ -338,7 +330,6 @@ async function loadCalendar() {
     } else {
         // Vercel: Load from Vercel Blob
         try {
-            console.log(4);
             const [handle] = await window.showOpenFilePicker({
                 types: [
                     {
@@ -501,7 +492,6 @@ function copyToClipboard(text) {
 }
 
 async function mergeCalendar() {
-    console.log(1);
 
     changesMade = false; // Reset changes flag
     calendarLoaded = true; // Mark calendar as loaded
@@ -549,7 +539,6 @@ async function mergeCalendar() {
     } else {
         // Vercel: Load from Vercel Blob
         try {
-            console.log(4);
             const [fileHandle] = await window.showOpenFilePicker({
                 types: [
                     {
@@ -558,9 +547,7 @@ async function mergeCalendar() {
                     }
                 ]
             });
-            console.log(5);
             const file = await fileHandle.getFile();
-            console.log(6);
             const fileContent = await file.text();
             const oldCalendarData = JSON.parse(fileContent);
             const calendar = document.getElementById('calendar');
