@@ -238,6 +238,7 @@ async function saveCalendar() {
         return { date, items };
     });
     const json = JSON.stringify({ title: calendarTitle, data: calendarData }, null, 2);
+
     try {
         const isLocalServer = window.location.hostname === 'localhost';
         if (isLocalServer) {
@@ -275,7 +276,7 @@ async function saveCalendar() {
             const writable = await fileHandle.createWritable();
             await writable.write(json);
             await writable.close();
-            alert('Calendar saved successfully in browser!');
+            // alert('Calendar saved successfully in browser!');
         }
         changesMade = false; // Reset changes flag
         document.getElementById('notification').style.display = 'none'; // Hide notification
