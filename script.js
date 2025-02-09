@@ -287,8 +287,6 @@ async function saveCalendar() {
 
 async function loadCalendar(event) {
     event.stopPropagation(); // Prevent event propagation
-    // event.preventDefault(); // Prevent default behavior
-    console.log(1);
 
     changesMade = false; // Reset changes flag
     calendarLoaded = true; // Mark calendar as loaded
@@ -296,9 +294,7 @@ async function loadCalendar(event) {
     document.getElementById('notification').style.display = 'none'; // Hide notification
 
     const isLocalServer = window.location.hostname === 'localhost';
-    console.log(2);
     if (isLocalServer) {
-        console.log(3);
         // Local server: Load from file input
         const fileInput = event.target;
         const file = fileInput.files[0];
