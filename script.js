@@ -213,7 +213,6 @@ function sortItems(dayDiv) {
 }
 
 async function saveCalendar() {
-    console.log(0);
     const calendarTitle = document.getElementById('calendar-title').value.trim();
     if (!calendarTitle) {
         alert("Please enter a calendar title.");
@@ -262,9 +261,10 @@ async function saveCalendar() {
             console.log('Calendar saved successfully on local server:', result);
             // alert('Calendar saved successfully on local server!');
         } else {
-            console.log(fileHandle);
-            console.log(originalFileName);
-            console.log(newFileName);
+            console.log('fileHandle:', fileHandle);
+            console.log('originalFileName:', originalFileName);
+            console.log('newFileName:', newFileName);
+
             if (!fileHandle || originalFileName !== newFileName) {
                 fileHandle = await window.showSaveFilePicker({
                     suggestedName: newFileName,
@@ -276,12 +276,13 @@ async function saveCalendar() {
                     ]
                 });
                 originalFileName = newFileName;
+                console.log('New fileHandle:', fileHandle);
+                console.log('New originalFileName:', originalFileName);
             }
-            console.log(2);
             const writable = await fileHandle.createWritable();
             await writable.write(json);
             await writable.close();
-            // alert('Calendar saved successfully in browser!');
+            alert('Calendar saved successfully in browser!');
         }
         changesMade = false; // Reset changes flag
         document.getElementById('notification').style.display = 'none'; // Hide notification
@@ -315,7 +316,7 @@ async function loadCalendar() {
     if (isLocalServer) {
         // Local server: Load from file input
         try {
-            const [fileHandle] = await window.showOpenFilePicker({
+            const [handle] = await window.showOpenFilePicker({
                 types: [
                     {
                         description: 'JSON Files',
@@ -323,7 +324,9 @@ async function loadCalendar() {
                     }
                 ]
             });
+            fileHandle = handle; // Store the file handle
             const file = await fileHandle.getFile();
+            originalFileName = file.name; // Store the original file name
             console.log('Selected file:', file.name);
             const fileContent = await file.text();
             const calendarData = JSON.parse(fileContent);
@@ -336,7 +339,7 @@ async function loadCalendar() {
         // Vercel: Load from Vercel Blob
         try {
             console.log(4);
-            const [fileHandle] = await window.showOpenFilePicker({
+            const [handle] = await window.showOpenFilePicker({
                 types: [
                     {
                         description: 'JSON Files',
@@ -344,9 +347,10 @@ async function loadCalendar() {
                     }
                 ]
             });
-            console.log(5);
+            fileHandle = handle; // Store the file handle
             const file = await fileHandle.getFile();
-            console.log(6);
+            originalFileName = file.name; // Store the original file name
+            console.log('Selected file:', file.name);
             const fileContent = await file.text();
             const calendarData = JSON.parse(fileContent);
             renderCalendar(calendarData);
