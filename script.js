@@ -287,7 +287,7 @@ async function saveCalendar() {
 
 async function loadCalendar(event) {
     event.stopPropagation(); // Prevent event propagation
-    event.preventDefault(); // Prevent default behavior
+    // event.preventDefault(); // Prevent default behavior
     console.log(1);
 
     changesMade = false; // Reset changes flag
