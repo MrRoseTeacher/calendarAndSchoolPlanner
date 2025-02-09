@@ -262,7 +262,9 @@ async function saveCalendar() {
             console.log('Calendar saved successfully on local server:', result);
             // alert('Calendar saved successfully on local server!');
         } else {
-            console.log(1);
+            console.log(fileHandle);
+            console.log(originalFileName);
+            console.log(newFileName);
             if (!fileHandle || originalFileName !== newFileName) {
                 fileHandle = await window.showSaveFilePicker({
                     suggestedName: newFileName,
