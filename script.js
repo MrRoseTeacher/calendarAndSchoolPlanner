@@ -213,44 +213,44 @@ function sortItems(dayDiv) {
 async function saveCalendar() {
     const calendarTitle = document.getElementById('calendar-title').value.trim();
     if (!calendarTitle) {
-        alert("Please enter a calendar title.");
-        return;
+      alert("Please enter a calendar title.");
+      return;
     }
     const safeTitle = calendarTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const calendar = document.getElementById('calendar');
     const days = Array.from(calendar.querySelectorAll('.day'));
     const calendarData = days.map(day => {
-        const date = day.id.split('day-')[1];
-        const items = Array.from(day.querySelectorAll('p')).map(item => {
-            const itemClone = item.cloneNode(true);
-            const dragHandle = itemClone.querySelector('.drag-handle');
-            if (dragHandle) {
-                dragHandle.remove(); // Remove drag handle
-            }
-            return {
-                type: item.className,
-                text: itemClone.innerHTML // Save innerHTML to preserve hyperlinks
-            };
-        });
-        return { date, items };
+      const date = day.id.split('day-')[1];
+      const items = Array.from(day.querySelectorAll('p')).map(item => {
+        const itemClone = item.cloneNode(true);
+        const dragHandle = itemClone.querySelector('.drag-handle');
+        if (dragHandle) {
+          dragHandle.remove(); // Remove drag handle
+        }
+        return {
+          type: item.className,
+          text: itemClone.innerHTML // Save innerHTML to preserve hyperlinks
+        };
+      });
+      return { date, items };
     });
     const json = JSON.stringify({ title: calendarTitle, data: calendarData });
     try {
-        const response = await fetch('/api/save', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: json
-        });
-        const result = await response.text();
-        console.log(result);
-        changesMade = false; // Reset changes flag after saving
-        document.getElementById('notification').style.display = 'none'; // Hide notification
+      const response = await fetch('/api/save', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ file: { name: `${safeTitle}.json`, content: json } })
+      });
+      const result = await response.json();
+      console.log(result);
+      changesMade = false; // Reset changes flag after saving
+      document.getElementById('notification').style.display = 'none'; // Hide notification
     } catch (error) {
-        console.error('Error saving calendar:', error);
+      console.error('Error saving calendar:', error);
     }
-}
+  }
 
 async function loadCalendar(event) {
     changesMade = false; // Reset changes flag
