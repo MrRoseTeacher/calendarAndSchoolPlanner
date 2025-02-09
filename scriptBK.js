@@ -1,7 +1,5 @@
 let changesMade = false;
 let calendarLoaded = false;
-let fileHandle; // Store the file handle for subsequent overwrites
-let originalFileName; // Store the original file name for comparison
 
 function showNotification() {
     const notification = document.getElementById('notification');
@@ -219,7 +217,6 @@ async function saveCalendar() {
         return;
     }
     const safeTitle = calendarTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-    const newFileName = `${safeTitle}.json`;
     const calendar = document.getElementById('calendar');
     const days = Array.from(calendar.querySelectorAll('.day'));
     const calendarData = days.map(day => {
@@ -237,51 +234,21 @@ async function saveCalendar() {
         });
         return { date, items };
     });
-    const json = JSON.stringify({ title: calendarTitle, data: calendarData }, null, 2);
+    const json = JSON.stringify({ title: calendarTitle, data: calendarData });
     try {
-        const isLocalServer = window.location.hostname === 'localhost';
-        if (isLocalServer) {
-            const response = await fetch('/api/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    file: {
-                        name: newFileName,
-                        content: json
-                    }
-                })
-            });
-            if (!response.ok) {
-                throw new Error(`Failed to save calendar: ${response.statusText}`);
-            }
-            const result = await response.json();
-            console.log('Calendar saved successfully on local server:', result);
-            // alert('Calendar saved successfully on local server!');
-        } else {
-            if (!fileHandle || originalFileName !== newFileName) {
-                fileHandle = await window.showSaveFilePicker({
-                    suggestedName: newFileName,
-                    types: [
-                        {
-                            description: 'JSON Files',
-                            accept: { 'application/json': ['.json'] }
-                        }
-                    ]
-                });
-                originalFileName = newFileName;
-            }
-            const writable = await fileHandle.createWritable();
-            await writable.write(json);
-            await writable.close();
-            alert('Calendar saved successfully in browser!');
-        }
-        changesMade = false; // Reset changes flag
+        const response = await fetch('http://localhost:3000/save', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: json
+        });
+        const result = await response.text();
+        console.log(result);
+        changesMade = false; // Reset changes flag after saving
         document.getElementById('notification').style.display = 'none'; // Hide notification
     } catch (error) {
         console.error('Error saving calendar:', error);
-        alert('An error occurred while saving the calendar. Please try again.');
     }
 }
 
