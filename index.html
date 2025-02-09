@@ -31,13 +31,11 @@
             </div>
             <div class="separator"></div>
             <div class="input-subgroup">
-                <button onclick="saveCalendar()">Save Calendar</button>
-                <button onclick="console.log(0); document.getElementById('load-calendar').click()">Load Calendar</button>
-                <button id="merge-button" onclick="document.getElementById('merge-calendar').click()" disabled>Merge Calendar</button>
+                <button id="save-button" onclick="saveCalendar()">Save Calendar</button>
+                <button id="load-button">Load Calendar</button>
+                <button id="merge-button" disabled>Merge Calendar</button>
             </div>
         </div>
-        <input type="file" id="load-calendar" onchange="loadCalendar(event)" style="display: none;">
-        <input type="file" id="merge-calendar" onchange="mergeCalendar(event)" style="display: none;">
         <div id="notification" class="notification" style="display: none;">Changes have been made. Remember to save.</div>
         <div id="calendar"></div>
     </div>

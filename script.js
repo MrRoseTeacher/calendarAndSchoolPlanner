@@ -285,10 +285,20 @@ async function saveCalendar() {
     }
 }
 
-async function loadCalendar(event) {
+document.addEventListener('DOMContentLoaded', () => {
+    document.getElementById('load-button').addEventListener('click', async function() {
+        console.log(0);
+        await loadCalendar();
+    });
+
+    document.getElementById('merge-button').addEventListener('click', async function() {
+        console.log(0);
+        await mergeCalendar();
+    });
+});
+
+async function loadCalendar() {
     console.log(1);
-    event.stopPropagation(); // Prevent event propagation
-    console.log(2);
 
     changesMade = false; // Reset changes flag
     calendarLoaded = true; // Mark calendar as loaded
@@ -298,20 +308,25 @@ async function loadCalendar(event) {
     const isLocalServer = window.location.hostname === 'localhost';
     if (isLocalServer) {
         // Local server: Load from file input
-        const fileInput = event.target;
-        const file = fileInput.files[0];
-        if (!file) {
-            return; // Exit the function if no file was selected
-        }
-        console.log('Selected file:', file.name);
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            const calendarData = JSON.parse(e.target.result);
+        try {
+            const [fileHandle] = await window.showOpenFilePicker({
+                types: [
+                    {
+                        description: 'JSON Files',
+                        accept: { 'application/json': ['.json'] }
+                    }
+                ]
+            });
+            const file = await fileHandle.getFile();
+            console.log('Selected file:', file.name);
+            const fileContent = await file.text();
+            const calendarData = JSON.parse(fileContent);
             renderCalendar(calendarData);
-        };
-        reader.readAsText(file);
+        } catch (error) {
+            console.error('Error loading calendar:', error);
+            alert('An error occurred while loading the calendar. Please try again.');
+        }
     } else {
-        console.log(3);
         // Vercel: Load from Vercel Blob
         try {
             console.log(4);
@@ -475,37 +490,92 @@ function copyToClipboard(text) {
     document.body.removeChild(textarea);
 }
 
-async function mergeCalendar(event) {
-    const fileInput = event.target;
-    const file = fileInput.files[0];
-    if (!file) {
-        // Exit the function if no file was selected
-        return;
-    }
-    console.log('Selected file for merging:', file.name);
-    const reader = new FileReader();
-    reader.onload = function(e) {
-        const oldCalendarData = JSON.parse(e.target.result);
-        const calendar = document.getElementById('calendar');
-        const days = Array.from(calendar.querySelectorAll('.day'));
-        let oldDataIndex = 0;
-        days.forEach(dayDiv => {
-            if (!dayDiv.classList.contains('holiday')) {
-                while (oldDataIndex < oldCalendarData.data.length) {
-                    const oldDayData = oldCalendarData.data[oldDataIndex];
-                    if (oldDayData.items.some(item => item.type === 'holiday-reason')) {
-                        oldDataIndex++;
-                        continue; // Skip days with "holiday-reason"
+async function mergeCalendar() {
+    console.log(1);
+
+    changesMade = false; // Reset changes flag
+    calendarLoaded = true; // Mark calendar as loaded
+    document.getElementById('merge-button').disabled = false; // Enable merge button
+    document.getElementById('notification').style.display = 'none'; // Hide notification
+
+    const isLocalServer = window.location.hostname === 'localhost';
+    if (isLocalServer) {
+        // Local server: Load from file input
+        try {
+            const [fileHandle] = await window.showOpenFilePicker({
+                types: [
+                    {
+                        description: 'JSON Files',
+                        accept: { 'application/json': ['.json'] }
                     }
-                    mergeDayItems(dayDiv, oldDayData.items);
-                    oldDataIndex++;
-                    break;
+                ]
+            });
+            const file = await fileHandle.getFile();
+            console.log('Selected file for merging:', file.name);
+            const fileContent = await file.text();
+            const oldCalendarData = JSON.parse(fileContent);
+            const calendar = document.getElementById('calendar');
+            const days = Array.from(calendar.querySelectorAll('.day'));
+            let oldDataIndex = 0;
+            days.forEach(dayDiv => {
+                if (!dayDiv.classList.contains('holiday')) {
+                    while (oldDataIndex < oldCalendarData.data.length) {
+                        const oldDayData = oldCalendarData.data[oldDataIndex];
+                        if (oldDayData.items.some(item => item.type === 'holiday-reason')) {
+                            oldDataIndex++;
+                            continue; // Skip days with "holiday-reason"
+                        }
+                        mergeDayItems(dayDiv, oldDayData.items);
+                        oldDataIndex++;
+                        break;
+                    }
                 }
-            }
-        });
-        markChanges(); // Mark changes after merging
-    };
-    reader.readAsText(file);
+            });
+            markChanges(); // Mark changes after merging
+        } catch (error) {
+            console.error('Error merging calendar:', error);
+            alert('An error occurred while merging the calendar. Please try again.');
+        }
+    } else {
+        // Vercel: Load from Vercel Blob
+        try {
+            console.log(4);
+            const [fileHandle] = await window.showOpenFilePicker({
+                types: [
+                    {
+                        description: 'JSON Files',
+                        accept: { 'application/json': ['.json'] }
+                    }
+                ]
+            });
+            console.log(5);
+            const file = await fileHandle.getFile();
+            console.log(6);
+            const fileContent = await file.text();
+            const oldCalendarData = JSON.parse(fileContent);
+            const calendar = document.getElementById('calendar');
+            const days = Array.from(calendar.querySelectorAll('.day'));
+            let oldDataIndex = 0;
+            days.forEach(dayDiv => {
+                if (!dayDiv.classList.contains('holiday')) {
+                    while (oldDataIndex < oldCalendarData.data.length) {
+                        const oldDayData = oldCalendarData.data[oldDataIndex];
+                        if (oldDayData.items.some(item => item.type === 'holiday-reason')) {
+                            oldDataIndex++;
+                            continue; // Skip days with "holiday-reason"
+                        }
+                        mergeDayItems(dayDiv, oldDayData.items);
+                        oldDataIndex++;
+                        break;
+                    }
+                }
+            });
+            markChanges(); // Mark changes after merging
+        } catch (error) {
+            console.error('Error merging calendar:', error);
+            alert('An error occurred while merging the calendar. Please try again.');
+        }
+    }
 }
 
 function mergeDayItems(dayDiv, newItems) {
