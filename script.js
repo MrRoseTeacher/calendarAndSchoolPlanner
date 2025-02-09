@@ -216,7 +216,11 @@ async function saveCalendar() {
       alert("Please enter a calendar title.");
       return;
     }
+  
+    // Create a safe file name
     const safeTitle = calendarTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+  
+    // Extract calendar data
     const calendar = document.getElementById('calendar');
     const days = Array.from(calendar.querySelectorAll('.day'));
     const calendarData = days.map(day => {
@@ -234,21 +238,39 @@ async function saveCalendar() {
       });
       return { date, items };
     });
+  
+    // Convert calendar data to JSON
     const json = JSON.stringify({ title: calendarTitle, data: calendarData });
+  
     try {
+      // Send the JSON data to the backend
       const response = await fetch('/api/save', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({ file: { name: `${safeTitle}.json`, content: json } })
+        body: JSON.stringify({
+          file: {
+            name: `${safeTitle}.json`, // File name
+            content: json             // File content
+          }
+        })
       });
+  
+      // Handle the response
+      if (!response.ok) {
+        throw new Error(`Failed to save calendar: ${response.statusText}`);
+      }
+  
       const result = await response.json();
-      console.log(result);
-      changesMade = false; // Reset changes flag after saving
-      document.getElementById('notification').style.display = 'none'; // Hide notification
+      console.log('Calendar saved successfully:', result);
+  
+      // Reset changes flag and hide notification
+      changesMade = false;
+      document.getElementById('notification').style.display = 'none';
     } catch (error) {
       console.error('Error saving calendar:', error);
+      alert('An error occurred while saving the calendar. Please try again.');
     }
   }
 

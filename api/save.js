@@ -7,15 +7,15 @@ module.exports = async (req, res) => {
   }
 
   try {
-    const file = req.body.file; // Ensure you're parsing the request body correctly
+    const { file } = req.body;
 
-    if (!file) {
-      res.status(400).json({ error: 'No file provided' });
+    if (!file || !file.name || !file.content) {
+      res.status(400).json({ error: 'Invalid file data' });
       return;
     }
 
     // Upload the file to Vercel Blob
-    const blob = await put(file.name, file, { access: 'public' });
+    const blob = await put(file.name, file.content, { access: 'public' });
 
     res.status(200).json({ url: blob.url });
   } catch (error) {
