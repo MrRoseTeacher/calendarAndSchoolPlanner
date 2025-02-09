@@ -218,12 +218,8 @@ async function saveCalendar() {
         alert("Please enter a calendar title.");
         return;
     }
-
-    // Create a safe file name
     const safeTitle = calendarTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
     const newFileName = `${safeTitle}.json`;
-
-    // Extract calendar data
     const calendar = document.getElementById('calendar');
     const days = Array.from(calendar.querySelectorAll('.day'));
     const calendarData = days.map(day => {
@@ -241,16 +237,10 @@ async function saveCalendar() {
         });
         return { date, items };
     });
-
-    // Convert calendar data to JSON
     const json = JSON.stringify({ title: calendarTitle, data: calendarData }, null, 2);
-
     try {
-        // Check if running on a local server or in a browser environment
         const isLocalServer = window.location.hostname === 'localhost';
-
         if (isLocalServer) {
-            // Local server: Save to the schedules directory
             const response = await fetch('/api/save', {
                 method: 'POST',
                 headers: {
@@ -263,18 +253,14 @@ async function saveCalendar() {
                     }
                 })
             });
-
             if (!response.ok) {
                 throw new Error(`Failed to save calendar: ${response.statusText}`);
             }
-
             const result = await response.json();
             console.log('Calendar saved successfully on local server:', result);
             alert('Calendar saved successfully on local server!');
         } else {
-            // Browser environment: Use File System Access API
             if (!fileHandle || originalFileName !== newFileName) {
-                // If no file handle exists or the title has changed, prompt the user to save a new file
                 fileHandle = await window.showSaveFilePicker({
                     suggestedName: newFileName,
                     types: [
@@ -284,17 +270,13 @@ async function saveCalendar() {
                         }
                     ]
                 });
-                originalFileName = newFileName; // Update the original file name
+                originalFileName = newFileName;
             }
-
-            // Write the JSON data to the selected file
             const writable = await fileHandle.createWritable();
             await writable.write(json);
             await writable.close();
-
             alert('Calendar saved successfully in browser!');
         }
-
         changesMade = false; // Reset changes flag
         document.getElementById('notification').style.display = 'none'; // Hide notification
     } catch (error) {
@@ -304,37 +286,26 @@ async function saveCalendar() {
 }
 
 async function loadCalendar(event) {
-    // Check if running on a local server or in a browser environment
     const isLocalServer = window.location.hostname === 'localhost';
-
     if (isLocalServer) {
-        // Original functionality for local server
         changesMade = false; // Reset changes flag
         calendarLoaded = true; // Mark calendar as loaded
         document.getElementById('merge-button').disabled = false; // Enable merge button
         document.getElementById('notification').style.display = 'none'; // Hide notification
-
         const fileInput = event.target;
         const file = fileInput.files[0];
         if (!file) {
             return; // Exit the function if no file was selected
         }
-
         console.log('Selected file:', file.name);
-
         const reader = new FileReader();
         reader.onload = function (e) {
             const calendarData = JSON.parse(e.target.result);
-
-            // Render the calendar data in your app
             renderCalendar(calendarData);
         };
-
         reader.readAsText(file);
     } else {
-        // New functionality for browser-based file handling
         try {
-            // Prompt the user to select a file
             [fileHandle] = await window.showOpenFilePicker({
                 types: [
                     {
@@ -343,16 +314,10 @@ async function loadCalendar(event) {
                     }
                 ]
             });
-
-            // Read the file content
             const file = await fileHandle.getFile();
             const fileContent = await file.text();
             const calendarData = JSON.parse(fileContent);
-
-            // Set the original file name
             originalFileName = file.name;
-
-            // Render the calendar data in your app
             renderCalendar(calendarData);
         } catch (error) {
             console.error('Error loading calendar:', error);

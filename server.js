@@ -9,11 +9,19 @@ const PORT = process.env.PORT || 3000;
 app.use(bodyParser.json());
 app.use(express.json());
 
+// Serve static files (CSS, JS)
+app.use(express.static(path.join(__dirname)));
+
 // Ensure the schedules directory exists
 const SCHEDULES_DIR = path.join(__dirname, 'schedules');
 if (!fs.existsSync(SCHEDULES_DIR)) {
     fs.mkdirSync(SCHEDULES_DIR);
 }
+
+// Serve index.html for the root URL
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'index.html'));
+});
 
 // Endpoint to save JSON data
 app.post('/api/save', async (req, res) => {
