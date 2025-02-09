@@ -213,134 +213,148 @@ function sortItems(dayDiv) {
 async function saveCalendar() {
     const calendarTitle = document.getElementById('calendar-title').value.trim();
     if (!calendarTitle) {
-      alert("Please enter a calendar title.");
-      return;
+        alert("Please enter a calendar title.");
+        return;
     }
-  
+
     // Create a safe file name
     const safeTitle = calendarTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
-  
+
     // Extract calendar data
     const calendar = document.getElementById('calendar');
     const days = Array.from(calendar.querySelectorAll('.day'));
     const calendarData = days.map(day => {
-      const date = day.id.split('day-')[1];
-      const items = Array.from(day.querySelectorAll('p')).map(item => {
-        const itemClone = item.cloneNode(true);
-        const dragHandle = itemClone.querySelector('.drag-handle');
-        if (dragHandle) {
-          dragHandle.remove(); // Remove drag handle
-        }
-        return {
-          type: item.className,
-          text: itemClone.innerHTML // Save innerHTML to preserve hyperlinks
-        };
-      });
-      return { date, items };
+        const date = day.id.split('day-')[1];
+        const items = Array.from(day.querySelectorAll('p')).map(item => {
+            const itemClone = item.cloneNode(true);
+            const dragHandle = itemClone.querySelector('.drag-handle');
+            if (dragHandle) {
+                dragHandle.remove(); // Remove drag handle
+            }
+            return {
+                type: item.className,
+                text: itemClone.innerHTML // Save innerHTML to preserve hyperlinks
+            };
+        });
+        return { date, items };
     });
-  
+
     // Convert calendar data to JSON
     const json = JSON.stringify({ title: calendarTitle, data: calendarData });
-  
+
     try {
-      // Send the JSON data to the backend
-      const response = await fetch('/api/save', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          file: {
-            name: `${safeTitle}.json`, // File name
-            content: json             // File content
-          }
-        })
-      });
-  
-      // Handle the response
-      if (!response.ok) {
-        throw new Error(`Failed to save calendar: ${response.statusText}`);
-      }
-  
-      const result = await response.json();
-      console.log('Calendar saved successfully:', result);
-  
-      // Reset changes flag and hide notification
-      changesMade = false;
-      document.getElementById('notification').style.display = 'none';
+        // Determine the API base URL dynamically
+        const apiBaseUrl = window.location.hostname === 'localhost' ? 'http://localhost:3000' : '';
+
+        // Send the JSON data to the backend
+        const response = await fetch(`${apiBaseUrl}/api/save`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                file: {
+                    name: `${safeTitle}.json`, // File name
+                    content: json             // File content
+                }
+            })
+        });
+
+        // Handle the response
+        if (!response.ok) {
+            throw new Error(`Failed to save calendar: ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('Calendar saved successfully:', result);
+
+        // Reset changes flag and hide notification
+        changesMade = false;
+        document.getElementById('notification').style.display = 'none';
     } catch (error) {
-      console.error('Error saving calendar:', error);
-      alert('An error occurred while saving the calendar. Please try again.');
+        console.error('Error saving calendar:', error);
+        alert('An error occurred while saving the calendar. Please try again.');
     }
-  }
+}
 
 async function loadCalendar(event) {
     changesMade = false; // Reset changes flag
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
     document.getElementById('notification').style.display = 'none'; // Hide notification
+
     const fileInput = event.target;
     const file = fileInput.files[0];
     if (!file) {
         return; // Exit the function if no file was selected
     }
+
     console.log('Selected file:', file.name);
+
     const reader = new FileReader();
-    reader.onload = function(e) {
-        const calendarData = JSON.parse(e.target.result);
-        document.getElementById('calendar-title').value = calendarData.title; // Set the title input
-        const calendar = document.getElementById('calendar');
-        calendar.innerHTML = '';
-        calendarData.data.forEach((dayData, index) => {
-            const dayDiv = createDayElement(dayData.date);
-            const options = { month: 'short', day: 'numeric' };
-            const dateParts = dayData.date.split('-');
-            const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
-            dayDiv.innerHTML = `<strong>${date.toLocaleDateString(undefined, options)}</strong>`;
-            const sortIcon = document.createElement('span');
-            sortIcon.innerHTML = '⤨'; // Sort icon
-            sortIcon.className = 'sort-icon';
-            sortIcon.style = 'cursor: pointer; margin-left: 5px;';
-            sortIcon.addEventListener('click', (e) => {
-                e.stopPropagation(); // Stop event propagation
-                sortItems(dayDiv);
-            });
-            dayDiv.appendChild(sortIcon);
-            dayData.items.forEach(itemData => {
-                const item = document.createElement('p');
-                item.className = itemData.type;
-                item.innerHTML = itemData.text; // Use innerHTML to preserve hyperlinks
-                item.addEventListener('click', (e) => editItem(e, item));
-                item.draggable = true; // Make item draggable
-                item.id = `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`; // Assign a unique id
-                item.addEventListener('dragstart', handleDragStart);
-                item.addEventListener('dragover', handleDragOver);
-                item.addEventListener('drop', handleDrop);
-                item.style = getItemStyle(itemData.type); // Apply inline styles
-                if (itemData.type !== 'holiday-reason') {
-                    const dragHandle = document.createElement('span');
-                    dragHandle.className = 'drag-handle';
-                    dragHandle.innerHTML = '⇅'; // Drag handle icon
-                    dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
-                    dragHandle.addEventListener('dragstart', handleDragStart);
-                    item.prepend(dragHandle);
+    reader.onload = async function (e) {
+        try {
+            const calendarData = JSON.parse(e.target.result);
+
+            // Render the calendar data in your app
+            document.getElementById('calendar-title').value = calendarData.title; // Set the title input
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+            calendarData.data.forEach((dayData, index) => {
+                const dayDiv = createDayElement(dayData.date);
+                const options = { month: 'short', day: 'numeric' };
+                const dateParts = dayData.date.split('-');
+                const date = new Date(dateParts[0], dateParts[1] - 1, dateParts[2]);
+                dayDiv.innerHTML = `<strong>${date.toLocaleDateString(undefined, options)}</strong>`;
+                const sortIcon = document.createElement('span');
+                sortIcon.innerHTML = '⤨'; // Sort icon
+                sortIcon.className = 'sort-icon';
+                sortIcon.style = 'cursor: pointer; margin-left: 5px;';
+                sortIcon.addEventListener('click', (e) => {
+                    e.stopPropagation(); // Stop event propagation
+                    sortItems(dayDiv);
+                });
+                dayDiv.appendChild(sortIcon);
+                dayData.items.forEach(itemData => {
+                    const item = document.createElement('p');
+                    item.className = itemData.type;
+                    item.innerHTML = itemData.text; // Use innerHTML to preserve hyperlinks
+                    item.addEventListener('click', (e) => editItem(e, item));
+                    item.draggable = true; // Make item draggable
+                    item.id = `item-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`; // Assign a unique id
+                    item.addEventListener('dragstart', handleDragStart);
+                    item.addEventListener('dragover', handleDragOver);
+                    item.addEventListener('drop', handleDrop);
+                    item.style = getItemStyle(itemData.type); // Apply inline styles
+                    if (itemData.type !== 'holiday-reason') {
+                        const dragHandle = document.createElement('span');
+                        dragHandle.className = 'drag-handle';
+                        dragHandle.innerHTML = '⇅'; // Drag handle icon
+                        dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+                        dragHandle.addEventListener('dragstart', handleDragStart);
+                        item.prepend(dragHandle);
+                    }
+                    dayDiv.appendChild(item);
+                });
+                if (dayData.items.some(item => item.type === 'holiday-reason')) {
+                    dayDiv.classList.add('holiday');
                 }
-                dayDiv.appendChild(item);
+                dayDiv.addEventListener('click', () => handleDayClick(dayDiv));
+                calendar.appendChild(dayDiv);
+                if ((index + 1) % 5 === 0) { // After every 5 days
+                    const copyButton = document.createElement('button');
+                    copyButton.innerHTML = '<span class="material-symbols-outlined">content_copy</span>'; // Material Symbols icon
+                    copyButton.style = 'padding: 5px; width: 30px; height: 30px; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer;';
+                    copyButton.addEventListener('click', () => copyWeek(date));
+                    calendar.appendChild(copyButton);
+                }
             });
-            if (dayData.items.some(item => item.type === 'holiday-reason')) {
-                dayDiv.classList.add('holiday');
-            }
-            dayDiv.addEventListener('click', () => handleDayClick(dayDiv));
-            calendar.appendChild(dayDiv);
-            if ((index + 1) % 5 === 0) { // After every 5 days
-                const copyButton = document.createElement('button');
-                copyButton.innerHTML = '<span class="material-symbols-outlined">content_copy</span>'; // Material Symbols icon
-                copyButton.style = 'padding: 5px; width: 30px; height: 30px; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer;';
-                copyButton.addEventListener('click', () => copyWeek(date));
-                calendar.appendChild(copyButton);
-            }
-        });
+        } catch (error) {
+            console.error('Error loading calendar:', error);
+            alert('An error occurred while loading the calendar. Please try again.');
+        }
     };
+
     reader.readAsText(file);
 }
 
