@@ -1,3 +1,11 @@
+.material-symbols-outlined {
+    font-variation-settings:
+    'FILL' 0,
+    'wght' 400,
+    'GRAD' 0,
+    'opsz' 24;
+}
+
 body {
     font-family: Arial, sans-serif;
     display: flex;
@@ -7,6 +15,20 @@ body {
     background-color: #f0f0f0;
     margin: 0;
     overflow: auto;
+}
+
+#popup{
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+    position: absolute;
+    width: 26rem;
+    height: 26rem;
+    background: #fff;
+    border: 1px solid #aaaaaa;
+    box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    left: calc(50vw - 13rem);
+    top: calc(50vh - 13rem);
 }
 
 .calendar-container {

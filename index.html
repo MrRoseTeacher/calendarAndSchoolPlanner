@@ -10,34 +10,34 @@
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
     <link rel="manifest" href="/site.webmanifest">
-    <style>
-        .material-symbols-outlined {
-            font-variation-settings:
-            'FILL' 0,
-            'wght' 400,
-            'GRAD' 0,
-            'opsz' 24;
-        }
-    </style>
 </head>
 <body>
     <div class="calendar-container">
         <div class="input-group">
             <div class="input-subgroup">
                 <input type="text" id="calendar-title" placeholder="Calendar Title">
+            </div><!-- end input subgroup-->
+            <div class="input-subgroup">
                 <input type="date" id="start-date" placeholder="Start Date">
                 <input type="date" id="end-date" placeholder="End Date">
                 <button onclick="generateCalendar()">Generate Calendar</button>
-            </div>
+            </div><!-- end input subgroup-->
             <div class="separator"></div>
             <div class="input-subgroup">
-                <button id="save-button" onclick="saveCalendar()">Save Calendar</button>
-                <button id="load-button">Load Calendar</button>
-                <button id="merge-button" disabled>Merge Calendar</button>
-            </div>
+                <button id="save-button" onclick="saveCalendar()">Save</button>
+                <button id="load-button">Load</button>
+                <button id="merge-button" disabled>Merge</button>
+                <button id="settings">Settings</button>
+            </div><!-- end input subgroup-->
+        </div>
+        <div id="settings-menu">
+            <!-- Create input type -->
         </div>
         <div id="notification" class="notification" style="display: none;">Changes have been made. Remember to save.</div>
-        <div id="calendar"></div>
+        <div id="calendar"></div><!-- populate with calendar-->
+    </div><!-- end calendar container -->
+    <div id="popup">
+        <p id="instructions"></p>
     </div>
     <script src="script.js"></script>
 </body>

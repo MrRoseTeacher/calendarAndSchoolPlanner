@@ -2,6 +2,8 @@ let changesMade = false;
 let calendarLoaded = false;
 let fileHandle; // Store the file handle for subsequent overwrites
 let originalFileName; // Store the original file name for comparison
+let popupToggle = false;
+const popup = document.getElementById("popup");
 
 function showNotification() {
     const notification = document.getElementById('notification');
@@ -12,6 +14,16 @@ function markChanges() {
     if (!changesMade) {
         changesMade = true;
         showNotification();
+    }
+}
+
+function togglePopup(){
+    popupToggle = !popupToggle;
+    if(popupToggle){
+        popup.style.opacity = 100;
+    }
+    else{
+        popup.style.opacity = 0;
     }
 }
 
