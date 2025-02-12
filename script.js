@@ -3,7 +3,10 @@ let calendarLoaded = false;
 let fileHandle; // Store the file handle for subsequent overwrites
 let originalFileName; // Store the original file name for comparison
 let popupToggle = false;
+const instructions = document.getElementById("instructions");
 const popup = document.getElementById("popup");
+const popupOK = document.getElementById("popup-ok");
+const popupCancel = document.getElementById("popup-cancel");
 
 function showNotification() {
     const notification = document.getElementById('notification');
@@ -25,6 +28,23 @@ function togglePopup(){
     else{
         popup.style.opacity = 0;
     }
+}
+
+function serveOptions(){
+    instructions.innerHTML = "Select action:<br>1: Content<br>2: Eval<br>3: Link<br>4: Homework<br>5: Personal Note<br>6: Personal Link<br>7: Holiday"
+    const node = document.createElement("input");
+    node.type = "text";
+    node.addEventListener("keypress", function(event){
+        if(event.key == "Enter"){
+            popupOK.click();
+        }
+    })
+    popup.appendChild(node);
+}
+
+popupOK.onclick = function(){
+    serveOptions();
+    console.log("Clicked");
 }
 
 function generateCalendar() {
