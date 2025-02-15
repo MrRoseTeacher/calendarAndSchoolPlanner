@@ -20,30 +20,54 @@
             <div class="input-subgroup">
                 <input type="date" id="start-date" placeholder="Start Date">
                 <input type="date" id="end-date" placeholder="End Date">
-                <button onclick="generateCalendar()">Generate</button>
+                <button class="button-default" onclick="generateCalendar()">Generate</button>
             </div><!-- end input subgroup-->
             <div class="separator"></div>
             <div class="input-subgroup">
-                <button id="save-button" onclick="saveCalendar()">Save</button>
-                <button id="load-button">Load</button>
-                <button id="merge-button" disabled>Merge</button>
-                <button id="settings">Settings</button>
+                <button class="button-default" id="save-button">Save</button>
+                <button class="button-default" id="load-button">Load</button>
+                <button class="button-default" id="merge-button" disabled>Merge</button>
             </div><!-- end input subgroup-->
         </div>
         <div id="settings-menu">
             <!-- Create input type -->
         </div>
-        <div id="notification" class="notification" style="display: none;">Changes have been made. Remember to save.</div>
+        <div id="notification" class="notification">Changes have been made. Remember to save.</div>
         <div id="calendar"></div><!-- populate with calendar-->
     </div><!-- end calendar container -->
     <div id="popup">
         <p id="instructions"></p>
         <div id="popup-content"></div>
         <div id="popup-buttons">
-            <button id="popup-ok">OK</button>
-            <button id="popup-cancel">Cancel</button>
+            <button class="button-default" id="popup-ok">OK</button>
+            <button class="button-default" id="popup-cancel">Cancel</button>
         </div>
     </div>
+    <div id="settings-bar">
+        <div id="input-settings">
+            <button class="button-default" id="input-toggle-button">I</button>
+            <button id="current-input">1</button>
+            <div id="input-toggle-menu" class="submenu">
+                <p>Input Type:</p>
+                <button class="button-minimal">Default</button>
+                <button class="button-minimal button-minimal-chosen">Persistent</button>
+            </div>
+            <div id="current-input-menu" class="submenu">
+                <button>1: Content</button>
+                <button>2: Eval</button>
+                <button>3: Link</button>
+                <button>4: Homework</button>
+                <button>5: Personal Note</button>
+                <button>6: Personal Link</button>
+                <button>7: Holiday</button>
+            </div>
+        </div>
+        <div id="alt-savebar">
+            <div id="alt-notification" class="notification">!</div>
+            <button class="button-default" id="alt-save">S</button>
+            <!-- <button id="alt-load">L</button> -->
+        </div>
+    </div><!-- end settings bar -->
     <script src="script.js"></script>
 </body>
 </html>

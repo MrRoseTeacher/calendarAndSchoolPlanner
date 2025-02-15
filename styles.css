@@ -1,10 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 
 :root{
     --accent: #007bff;
+    --accent-hover: #0056b3;
     --darkAccent: #535353;
     --text: #3f3f3f;
     --white: #fbfbfb;
+    --bg: #f0f0f0;
+    --content: #d1ecf1;
+    --content-text: #0c5460;
+    --eval: #d4edda;
+    --eval-text:#155724;
+    --link: #cce5ff;
+    --link-text: #004085;
+    --homework: #fff3cd;
+    --homework-text: #856404;
+    --personalNote: #e2e3e5;
+    --personalNote-text: #383d41;
+    --personalLink: #e2e3e5;
+    --personalLink-text: #383d41;
+    --holiday: #ffcccc;
+    --holiday-text: #721c24;
 }
 
 .material-symbols-outlined {
@@ -24,7 +41,7 @@ body {
     justify-content: center;
     align-items: flex-start;
     height: 100vh;
-    background-color: #f0f0f0;
+    background-color: var(--bg);
     margin: 0;
     overflow: auto;
     color: var(--text);
@@ -32,8 +49,9 @@ body {
 
 #popup{
     opacity: 0;
+    visibility: hidden;
     transition: opacity 0.15s ease-in-out;
-    position: absolute;
+    position: fixed;
     width: 24rem;
     /* height: 24rem; */
     background: var(--white);
@@ -59,6 +77,114 @@ body {
     position:absolute;
     bottom: 2rem;
     right: calc(2rem - 5px);
+}
+
+#settings-bar{
+    position:fixed;
+    bottom:0;
+    left:0;
+    height: 2rem;
+    width: 100%;
+    display:flex;
+    justify-content:space-between;
+}
+
+#alt-savebar, #input-settings{
+    display:flex;
+    margin: 0.25rem 0.5rem 0.25rem 0;
+}
+
+#alt-savebar button, #alt-savebar .notification{
+    padding: 0.25rem 0.5rem;
+    margin: 0 0.5rem;
+}
+
+#alt-savebar .notification{
+    margin-right: 0;
+}
+
+.submenu{
+    background: var(--bg);
+    position:absolute;
+    bottom: 2rem;
+    border-radius: 4px;
+    box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.25);
+}
+
+.submenu p{
+    margin-left:0.5rem;
+    margin-right: 0.5rem;
+}
+
+.button-minimal{
+    padding: 0.5rem;
+    color: var(--text);
+}
+
+.button-minimal-chosen{
+    color: var(--accent);
+    margin: 0.5rem 0;
+}
+
+.button-minimal:hover{
+    color: var(--accent-hover) !important;
+}
+
+#current-input-menu button{
+    display:block;
+    margin: 0.5rem !important;
+    /* background: var(--bg);
+    color: var(--text); */
+}
+
+.submenu button:hover{
+    color: var(--white);
+}
+
+#input-settings{
+    display:flex;
+    margin-left:0.4rem;
+}
+
+#input-settings button{
+    display:block;
+}
+
+#input-toggle-button{
+    font-family: "Source Code Pro";
+    padding: 0.25rem 0.5rem;
+    margin: 0 0.5rem;
+}
+
+#input-toggle-menu{
+    left: 0.4rem;
+    transition: opacity 0.15s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
+}
+
+#input-toggle-menu p{
+    font-size: 0.85rem;
+}
+
+#current-input{
+    background: var(--content);
+    color: var(--content-text);
+    border-radius: 4px;
+    margin-left:0 !important;
+    padding: 0.2rem 0.5rem 0.3rem 0.5rem !important;
+    border:none;
+}
+
+#alt-notification{
+    padding: 0.15rem 0.5rem 0.35rem 0.5rem !important;
+}
+
+#current-input-menu{
+    left:2.4rem;
+    transition: opacity 0.15s ease-in-out;
+    visibility: hidden;
+    opacity: 0;
 }
 
 .calendar-container {
@@ -107,22 +233,25 @@ input[type="date"], input[type="text"] {
     margin: 10px 0;
 }
 
-button, .custom-file-upload {
+button{
+    border:none;
+    border-radius: 4px;
+}
+
+.button-default, .custom-file-upload {
     padding: 10px 20px;
-    border: none;
     background-color: var(--accent);
     color: #fff;
-    border-radius: 4px;
     cursor: pointer;
     display: inline-block;
     margin: 10px 5px;
 }
 
-button:hover, .custom-file-upload:hover {
-    background-color: #0056b3;
+.button-default:hover, .custom-file-upload:hover {
+    background-color: var(--accent-hover);
 }
 
-button:disabled {
+.button-default:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
@@ -150,39 +279,39 @@ button:disabled {
     padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: #e9ecef;
+    background-color: var(--bg);
     min-height: 100px;
     cursor: pointer;
     word-wrap: break-word; /* Ensure text wraps within the box */
 }
 
 .holiday {
-    background-color: #ffcccc;
-    color: #721c24; /* Ensuring contrast */
+    background-color: var(--holiday);
+    color: var(--holiday-text); /* Ensuring contrast */
 }
 
 .content {
-    background-color: #d1ecf1;
-    color: #0c5460; /* Ensuring contrast */
+    background-color: var(--content);
+    color: var(--content-text); /* Ensuring contrast */
 }
 
 .homework {
-    background-color: #fff3cd;
-    color: #856404; /* Ensuring contrast */
+    background-color: var(--homework);
+    color: var(--homework-text); /* Ensuring contrast */
 }
 
 .eval {
-    background-color: #d4edda;
-    color: #155724; /* Ensuring contrast */
+    background-color: var(--eval);
+    color: var(--eval-text) /* Ensuring contrast */
 }
 
 .link {
-    background-color: #cce5ff;
-    color: #004085; /* Ensuring contrast */
+    background-color: var(--link);
+    color: var(--link-text); /* Ensuring contrast */
 }
 
 .link a {
-    color: #004085; /* Link color */
+    color: var(--link-text); /* Link color */
     text-decoration: none; /* Remove underline */
 }
 
@@ -191,7 +320,7 @@ button:disabled {
 }
 
 .link a:visited {
-    color: #004085; /* Ensure visited link color stays the same */
+    color: var(--link-text); /* Ensure visited link color stays the same */
 }
 
 .notification {
@@ -201,15 +330,16 @@ button:disabled {
     border-radius: 4px;
     margin-top: 10px;
     text-align: center;
+    display: none;
 }
 
 .personal-note, .personal-link {
-    background-color: #e2e3e5; /* Unique color */
-    color: #383d41; /* Ensuring contrast */
+    background-color: var(--personalNote); /* Unique color */
+    color: var(--personalNote-text); /* Ensuring contrast */
 }
 
 .personal-link a {
-    color: #383d41; /* Link color */
+    color: var(--personalNote-text); /* Link color */
     text-decoration: none; /* Remove underline */
 }
 
@@ -218,7 +348,7 @@ button:disabled {
 }
 
 .personal-link a:visited {
-    color: #383d41; /* Ensure visited link color stays the same */
+    color: var(--personalNote-text); /* Ensure visited link color stays the same */
 }
 
 /* Media query for responsive design */

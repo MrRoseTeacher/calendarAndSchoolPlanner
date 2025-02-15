@@ -3,18 +3,33 @@ let calendarLoaded = false;
 let fileHandle; // Store the file handle for subsequent overwrites
 let originalFileName; // Store the original file name for comparison
 let popupToggle = false;
+let currentInputMenuToggle = false;
+let inputMenuToggle = false;
 let optionsDiag = false;
 let contentDiag = false;
 let linkDiag = false;
+let persistentInput = true;
+let currentAction = 1;
+let targetDate = "";
+const saveButton = document.getElementById("save-button");
+const altSave = document.getElementById("alt-save");
+// const altLoad = document.getElementById("alt-load");
+const inputToggleButton = document.getElementById("input-toggle-button");
+const altNotification = document.getElementById("alt-notification");
+const inputToggleMenu = document.getElementById("input-toggle-menu");
+const currentInputMenu = document.getElementById("current-input-menu");
+const currentInput = document.getElementById("current-input");
 const instructions = document.getElementById("instructions");
 const popup = document.getElementById("popup");
 const popupOK = document.getElementById("popup-ok");
 const popupCancel = document.getElementById("popup-cancel");
 const popupContent = document.getElementById("popup-content");
+const colourPairs = [["var(--content)", "var(--content-text)"], ["var(--eval)", "var(--eval-text)"], ["var(--link)", "var(--link-text)"], ["var(--homework)", "var(--homework-text)"], ["var(--personalNote)", "var(--personalNote-text)"], ["var(--personalLink)", "var(--personalLink-text)"], ["var(--holiday)", "var(--holiday-text)"]];
 
 function showNotification() {
     const notification = document.getElementById('notification');
     notification.style.display = 'block';
+    altNotification.style.display = 'block';
 }
 
 function markChanges() {
@@ -24,20 +39,47 @@ function markChanges() {
     }
 }
 
+window.addEventListener("keydown", function(event){
+    if(!popupToggle){
+        if(event.key == "i"){
+            if(persistentInput){
+                inputToggleMenu.querySelectorAll('button')[0].click()
+            }
+            else{
+                inputToggleMenu.querySelectorAll('button')[1].click()
+            }
+            if(inputMenuToggle){
+                toggleInputMenu();
+            }
+        }
+    }
+    if(persistentInput && !popupToggle){
+        if(/[1-7]/g.test(event.key)){
+        currentAction = event.key;
+        currentInput.innerHTML = currentAction;
+        currentInput.style.backgroundColor = colourPairs[Number(currentAction)-1][0];
+        currentInput.style.color = colourPairs[Number(currentAction)-1][1];
+        }
+    }
+})
+
 function togglePopup(){
     popupToggle = !popupToggle;
-    popup.style.top = window.scrollY + window.innerHeight/2 - 16*13 + "px";
     if(popupToggle){
+        popup.style.visibility = "visible";
         popup.style.opacity = 1;
     }
     else{
+        popup.style.visibility = "hidden";
         popup.style.opacity = 0;
     }
 }
 
-popupCancel.onclick = function(){
-    togglePopup();
-}
+popupCancel.onclick = togglePopup;
+saveButton.onclick = saveCalendar;
+altSave.onclick = saveCalendar;
+currentInput.onclick = toggleCurrentInputMenu;
+inputToggleButton.onclick = toggleInputMenu;
 
 function serveOptions(dayDiv){
     optionsDiag = true;
@@ -60,6 +102,9 @@ function serveOptions(dayDiv){
 }
 
 function serveContent(dayDiv, actionType){
+    if(!popupToggle){
+        togglePopup();
+    }
     if (actionType === 'holiday') {
         if (dayDiv.classList.contains('holiday')) {
             dayDiv.classList.remove('holiday');
@@ -229,8 +274,13 @@ function generateCalendar() {
 }
 
 function handleDayClick(dayDiv) {
-    togglePopup();
-    serveOptions(dayDiv);
+    if(persistentInput){
+        createContent(dayDiv, String(currentAction));
+    }
+    else{
+        togglePopup();
+        serveOptions(dayDiv);
+    }
 }
 
 function createContent(dayDiv, action){
@@ -278,7 +328,6 @@ function editItem(event, item) {
 }
 
 function editContent(item) {
-    console.log("editing content");
     togglePopup();
     const dragHandle = item.querySelector('.drag-handle');
     const textContent = dragHandle ? item.textContent.replace(dragHandle.textContent, '').trim() : item.textContent.trim();
@@ -441,6 +490,7 @@ async function saveCalendar() {
         }
         changesMade = false; // Reset changes flag
         document.getElementById('notification').style.display = 'none'; // Hide notification
+        altNotification.style.display = 'none';
     } catch (error) {
         console.error('Error saving calendar:', error);
         alert('An error occurred while saving the calendar. Please try again.');
@@ -455,7 +505,81 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('merge-button').addEventListener('click', async function() {
         await mergeCalendar();
     });
+    const inputButtons = currentInputMenu.querySelectorAll("button");
+    for (let i=0; i<inputButtons.length; i++){
+        inputButtons[i].style.backgroundColor = colourPairs[i][0];
+        inputButtons[i].style.color = colourPairs[i][1];
+        inputButtons[i].onclick = function(){
+            currentAction = inputButtons[i].innerHTML[0];
+            currentInput.innerHTML = currentAction;
+            currentInput.style.backgroundColor = colourPairs[Number(currentAction)-1][0];
+            currentInput.style.color = colourPairs[Number(currentAction)-1][1];
+            toggleCurrentInputMenu();
+        }
+    }
+    const inputOptions = inputToggleMenu.querySelectorAll('button');
+    inputOptions[0].onclick = function(){
+        inputOptions[1].classList.remove("button-minimal-chosen");
+        inputOptions[0].classList.add("button-minimal-chosen")
+        persistentInput = false;
+        currentInput.style.visibility = "hidden";
+        toggleInputMenu();
+    }
+    inputOptions[1].onclick = function(){
+        inputOptions[0].classList.remove("button-minimal-chosen");
+        inputOptions[1].classList.add("button-minimal-chosen")
+        persistentInput = true;
+        currentInput.style.visibility = "visible";
+        toggleInputMenu();
+    }
+    const date = new Date();
+    let year = date.getFullYear()
+    let month = date.getMonth()+1
+    if(month < 10){month = "0" + String(month);}
+    let day = date.getDate();
+    if(date.getDay() == 6){day += 2;}
+    else if(date.getDay() == 7){day += 1;}
+    targetDate = year + "-" + month + "-" + day;
 });
+
+function toggleCurrentInputMenu(){
+    currentInputMenuToggle = !currentInputMenuToggle;
+    if(currentInputMenuToggle){
+        currentInputMenu.style.opacity = 1;
+        currentInputMenu.style.visibility = "visible";
+    }
+    else{
+        currentInputMenu.style.opacity = 0;
+        currentInputMenu.style.visibility = "hidden";
+    }
+}
+
+function toggleInputMenu(){
+    inputMenuToggle = !inputMenuToggle;
+    if(inputMenuToggle){
+        inputToggleMenu.style.opacity = 1;
+        inputToggleMenu.style.visibility = "visible";
+    }
+    else{
+        inputToggleMenu.style.opacity = 0;
+        inputToggleMenu.style.visibility = "hidden";
+    }
+}
+
+function scrollToDate(i, Arr){
+    if(i >= Arr.length){
+        return;
+    }
+    tempElement = Arr[i];
+    tempId = tempElement.id.substring(4);
+    if(targetDate == tempId){
+        value = tempElement.offsetTop;
+        window.scrollTo(0, value);
+    }
+    else{
+        scrollToDate(i+1, Arr);
+    }
+}
 
 async function loadCalendar() {
 
@@ -463,6 +587,7 @@ async function loadCalendar() {
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
     document.getElementById('notification').style.display = 'none'; // Hide notification
+    altNotification.style.display = 'none';
 
     const isLocalServer = window.location.hostname === 'localhost';
     if (isLocalServer) {
@@ -520,6 +645,8 @@ async function loadCalendar() {
             }
         }
     }
+    const dayList = document.getElementById('calendar').querySelectorAll('div');
+    scrollToDate(0, dayList);
 }
 
 // Helper function to render the calendar
@@ -606,13 +733,16 @@ function copyWeek(currentDate) {
     const startIndex = days.findIndex(day => day.id === `day-${currentDate.toISOString().split('T')[0]}`);
     const weekDays = days.slice(startIndex - 4, startIndex + 1); // Adjust this to select the desired week
     let weekHTML = '<div class="calendar" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 94%;">';
+    
     weekDays.forEach(day => {
         const dayStyleString = dayStyle(day); // Generate the style string
-        const dayHTML = day.outerHTML.replace(/class="day holiday"/, `class="day holiday" style="${dayStyleString}"`)
-            .replace(/class="day"/, `class="day" style="${dayStyleString}"`);
+        const dayHTML = day.outerHTML
+            .replace(/class="day holiday( drag-over)?"/, `class="day holiday" style="${dayStyleString}"`)
+            .replace(/class="day( drag-over)?"/, `class="day" style="${dayStyleString}"`);
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = dayHTML;
         const dayElement = tempDiv.firstChild;
+        
         dayElement.querySelectorAll('p').forEach(p => {
             if (!p.classList.contains('personal-note') && !p.classList.contains('personal-link')) {
                 p.style = getItemStyle(p.className);
@@ -636,7 +766,6 @@ function copyWeek(currentDate) {
     copyToClipboard(weekHTML);
     alert('Week copied to clipboard!');
 }
-
 function dayStyle(day) {
     const styles = window.getComputedStyle(day);
     const isHoliday = day.classList.contains('holiday');
@@ -667,6 +796,7 @@ async function mergeCalendar() {
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
     document.getElementById('notification').style.display = 'none'; // Hide notification
+    altNotification.style.display = 'none';
 
     const isLocalServer = window.location.hostname === 'localhost';
     if (isLocalServer) {
