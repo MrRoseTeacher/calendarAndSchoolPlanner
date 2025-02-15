@@ -483,7 +483,7 @@ async function loadCalendar() {
             const calendarData = JSON.parse(fileContent);
             renderCalendar(calendarData);
         } catch (error) {
-            if (error instanceof AbortError){
+            if (error.name === "AbortError"){
                 console.error("User aborted file selection", error);
             }
             else{
@@ -510,7 +510,7 @@ async function loadCalendar() {
             const calendarData = JSON.parse(fileContent);
             renderCalendar(calendarData);
         } catch (error) {
-            if (error instanceof AbortError){
+            if (error.name === "AbortError"){
                 console.error("User aborted file selection", error);
             }
             else{
