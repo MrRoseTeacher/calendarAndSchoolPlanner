@@ -262,64 +262,6 @@ function createContent(dayDiv, action){
             return;
     }
     serveContent(dayDiv, actionType);
-    // if (actionType === 'holiday') {
-    //     if (dayDiv.classList.contains('holiday')) {
-    //         dayDiv.classList.remove('holiday');
-    //         dayDiv.querySelector('.holiday-reason').remove();
-    //     } else {
-    //         const reason = prompt("Enter reason for holiday:");
-    //         if (reason) {
-    //             dayDiv.classList.add('holiday');
-    //             const reasonP = document.createElement('p');
-    //             reasonP.className = 'holiday-reason';
-    //             reasonP.textContent = reason;
-    //             dayDiv.appendChild(reasonP);
-    //         }
-    //     }
-    // } else if (actionType === 'link' || actionType === 'personal-link') {
-    //     const url = prompt("Enter URL:");
-    //     const linkText = prompt("Enter link text:");
-    //     if (url && linkText) {
-    //         const item = document.createElement('p');
-    //         item.className = actionType;
-    //         item.innerHTML = `<a href="${url}" target="_blank">${linkText}</a>`;
-    //         item.addEventListener('click', (e) => editItem(e, item));
-    //         item.draggable = true; // Make item draggable
-    //         item.id = `item-${Date.now()}`; // Assign a unique id
-    //         item.addEventListener('dragstart', handleDragStart);
-    //         item.addEventListener('dragover', handleDragOver);
-    //         item.addEventListener('drop', handleDrop);
-    //         const dragHandle = document.createElement('span');
-    //         dragHandle.className = 'drag-handle';
-    //         dragHandle.innerHTML = '⇅'; // Drag handle icon
-    //         dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
-    //         dragHandle.addEventListener('dragstart', handleDragStart);
-    //         item.prepend(dragHandle);
-    //         dayDiv.appendChild(item);
-    //         markChanges(); // Mark changes
-    //     }
-    // } else {
-    //     const itemText = prompt("Enter item text");
-    //     if (itemText) {
-    //         const item = document.createElement('p');
-    //         item.className = actionType;
-    //         item.innerHTML = itemText; // Allow HTML input for hyperlinks
-    //         item.addEventListener('click', (e) => editItem(e, item));
-    //         item.draggable = true; // Make item draggable
-    //         item.id = `item-${Date.now()}`; // Assign a unique id
-    //         item.addEventListener('dragstart', handleDragStart);
-    //         item.addEventListener('dragover', handleDragOver);
-    //         item.addEventListener('drop', handleDrop);
-    //         const dragHandle = document.createElement('span');
-    //         dragHandle.className = 'drag-handle';
-    //         dragHandle.innerHTML = '⇅'; // Drag handle icon
-    //         dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
-    //         dragHandle.addEventListener('dragstart', handleDragStart);
-    //         item.prepend(dragHandle);
-    //         dayDiv.appendChild(item);
-    //         markChanges(); // Mark changes
-    //     }
-    // }
 }
 
 function editItem(event, item) {
@@ -335,50 +277,89 @@ function editItem(event, item) {
 }
 
 function editContent(item) {
+    console.log("editing content");
+    togglePopup();
     const dragHandle = item.querySelector('.drag-handle');
     const textContent = dragHandle ? item.textContent.replace(dragHandle.textContent, '').trim() : item.textContent.trim();
-    const newText = prompt("Edit item text:", textContent);
-    if (newText === null) return; // Exit if the user presses cancel
-    if (newText.trim() === "") {
-        item.remove(); // Remove the item if the new text is empty
-        markChanges(); // Mark changes
-    } else {
-        item.innerHTML = newText;
-        if (dragHandle) {
-            item.prepend(dragHandle); // Re-add the drag handle
+    // const newText = prompt("Edit item text:", textContent);
+    instructions.innerHTML = "Edit item text";
+    popupContent.innerHTML = "";
+    const node = document.createElement("input");
+    node.type = "text";
+    node.value = textContent;
+    node.addEventListener("keypress", function(event){
+        if(event.key == "Enter"){
+            popupOK.click();
         }
-        markChanges(); // Mark changes
+    })
+    popupContent.appendChild(node);
+    node.onfocus = function(){
+        node.select();
+    }
+    node.focus();
+    popupOK.onclick = function(){
+        if (node.value.trim() === "") {
+            item.remove(); // Remove the item if the new text is empty
+            markChanges(); // Mark changes
+        } else {
+            item.innerHTML = node.value;
+            if (dragHandle) {
+                item.prepend(dragHandle); // Re-add the drag handle
+            }
+            markChanges(); // Mark changes
+        }
+        togglePopup();
     }
 }
 
 function editLink(item) {
+    togglePopup();
     const dragHandle = item.querySelector('.drag-handle');
     const linkElement = item.querySelector('a');
     const linkText = dragHandle ? linkElement.textContent.replace(dragHandle.textContent, '').trim() : linkElement.textContent.trim();
-    const newText = prompt("Edit item text:", linkText);
-    if (newText === null) return; // Exit if the user presses cancel
-    if (newText.trim() === "") {
-        item.remove(); // Remove the item if the new text is empty
+    instructions.innerHTML = "Edit the URL";
+    popupContent.innerHTML = "";
+    const node = document.createElement("input");
+    node.type = "text";
+    node.value = linkElement.href;
+    node.addEventListener("keypress", function(event){
+        if(event.key == "Enter"){
+            popupOK.click();
+        }
+    })
+    popupContent.appendChild(node);
+    node.onfocus = function(){
+        node.select();
+    }
+    node.focus();
+    const pnode = document.createElement("p");
+    pnode.innerHTML = "Edit the link text"
+    popupContent.appendChild(pnode);
+    const node2 = document.createElement("input");
+    node2.type = "text";
+    node2.value = linkText;
+    node2.onfocus = function(){
+        node2.select();
+    }
+    node2.addEventListener("keypress", function(event){
+        if(event.key == "Enter"){
+            popupOK.click();
+        }
+    })
+    popupContent.appendChild(node2);
+    popupOK.onclick = function(){
+        if (node.value.trim() === "" || node2.value.trim() === "") {
+            item.remove(); // Remove the item if the new text is empty
+        } else {
+            linkElement.textContent = node2.value;
+            linkElement.href = node.value;
+        }
+        if (dragHandle) {
+            item.prepend(dragHandle); // Re-add the drag handle
+        }
         markChanges(); // Mark changes
-        return;
-    } else {
-        linkElement.textContent = newText;
+        togglePopup();
     }
-    const newUrl = prompt("Edit URL:", linkElement.href);
-    if (newUrl === null) {
-        return;
-    } // Exit if the user presses cancel
-    else if (newUrl.trim() === "") {
-        item.remove(); // Remove the item if the new text is empty
-        markChanges(); // Mark changes
-        return;
-    } else {
-        linkElement.href = newUrl;
-    }
-    if (dragHandle) {
-        item.prepend(dragHandle); // Re-add the drag handle
-    }
-    markChanges(); // Mark changes
 }
 
 function sortItems(dayDiv) {

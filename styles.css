@@ -52,13 +52,13 @@ body {
 }
 
 #popup input:last-of-type{
-    margin-bottom:4rem;
+    margin-bottom:5rem;
 }
 
 #popup-buttons{
     position:absolute;
-    bottom: 1rem;
-    right: 1rem;
+    bottom: 2rem;
+    right: calc(2rem - 5px);
 }
 
 .calendar-container {
