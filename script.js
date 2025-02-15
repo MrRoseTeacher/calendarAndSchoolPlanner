@@ -483,13 +483,13 @@ async function loadCalendar() {
             const calendarData = JSON.parse(fileContent);
             renderCalendar(calendarData);
         } catch (error) {
-            // if (error instanceof AbortError){
-            //     console.error("User aborted file selection", error);
-            // }
-            // else{
+            if (error instanceof AbortError){
+                console.error("User aborted file selection", error);
+            }
+            else{
                 console.error('Error loading calendar:', error);
                 alert('An error occurred while loading the calendar. Please try again.');
-            // }
+            }
         }
     } else {
         // Vercel: Load from Vercel Blob
@@ -510,13 +510,13 @@ async function loadCalendar() {
             const calendarData = JSON.parse(fileContent);
             renderCalendar(calendarData);
         } catch (error) {
-            // if (error instanceof AbortError){
-            //     console.error("User aborted file selection", error);
-            // }
-            // else{
+            if (error instanceof AbortError){
+                console.error("User aborted file selection", error);
+            }
+            else{
                 console.error('Error loading calendar:', error.name);
                 alert('An error occurred while loading the calendar. Please try again.');
-            // }
+            }
         }
     }
 }
