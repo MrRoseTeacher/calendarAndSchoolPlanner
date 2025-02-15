@@ -26,6 +26,7 @@ function markChanges() {
 
 function togglePopup(){
     popupToggle = !popupToggle;
+    popup.style.top = window.scrollY + window.innerHeight/2 - 16*13 + "px";
     if(popupToggle){
         popup.style.opacity = 1;
     }

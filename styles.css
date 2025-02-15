@@ -10,7 +10,7 @@
 .material-symbols-outlined {
     font-variation-settings:
     'FILL' 0,
-    'wght' 400,
+    'wght' 300,
     'GRAD' 0,
     'opsz' 24;
 }
@@ -93,7 +93,7 @@ body {
 }
 
 input[type="date"], input[type="text"] {
-    margin: 10px;
+    margin: 10px 5px;
     padding: 5px;
     border: 1px solid #ccc;
     border-radius: 4px;
