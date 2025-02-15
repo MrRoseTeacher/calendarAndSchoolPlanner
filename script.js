@@ -486,10 +486,10 @@ async function loadCalendar() {
             // if (error instanceof AbortError){
             //     console.error("User aborted file selection", error);
             // }
-            else{
+            // else{
                 console.error('Error loading calendar:', error);
                 alert('An error occurred while loading the calendar. Please try again.');
-            }
+            // }
         }
     } else {
         // Vercel: Load from Vercel Blob
