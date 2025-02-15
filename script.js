@@ -3,10 +3,14 @@ let calendarLoaded = false;
 let fileHandle; // Store the file handle for subsequent overwrites
 let originalFileName; // Store the original file name for comparison
 let popupToggle = false;
+let optionsDiag = false;
+let contentDiag = false;
+let linkDiag = false;
 const instructions = document.getElementById("instructions");
 const popup = document.getElementById("popup");
 const popupOK = document.getElementById("popup-ok");
 const popupCancel = document.getElementById("popup-cancel");
+const popupContent = document.getElementById("popup-content");
 
 function showNotification() {
     const notification = document.getElementById('notification');
@@ -23,15 +27,23 @@ function markChanges() {
 function togglePopup(){
     popupToggle = !popupToggle;
     if(popupToggle){
-        popup.style.opacity = 100;
+        popup.style.opacity = 1;
     }
     else{
         popup.style.opacity = 0;
     }
 }
 
-function serveOptions(){
+popupCancel.onclick = function(){
+    togglePopup();
+}
+
+function serveOptions(dayDiv){
+    optionsDiag = true;
+    contentDiag = false;
+    linkDiag = false;
     instructions.innerHTML = "Select action:<br>1: Content<br>2: Eval<br>3: Link<br>4: Homework<br>5: Personal Note<br>6: Personal Link<br>7: Holiday"
+    popupContent.innerHTML = "";
     const node = document.createElement("input");
     node.type = "text";
     node.addEventListener("keypress", function(event){
@@ -39,12 +51,141 @@ function serveOptions(){
             popupOK.click();
         }
     })
-    popup.appendChild(node);
+    popupContent.appendChild(node);
+    node.focus();
+    popupOK.onclick = function(){
+        createContent(dayDiv, node.value);
+    }
 }
 
-popupOK.onclick = function(){
-    serveOptions();
-    console.log("Clicked");
+function serveContent(dayDiv, actionType){
+    if (actionType === 'holiday') {
+        if (dayDiv.classList.contains('holiday')) {
+            dayDiv.classList.remove('holiday');
+            dayDiv.querySelector('.holiday-reason').remove();
+            togglePopup();
+        } else {
+            instructions.innerHTML = "Enter reason for holiday";
+            popupContent.innerHTML = "";
+            const node = document.createElement("input");
+            node.type = "text";
+            node.addEventListener("keypress", function(event){
+                if(event.key == "Enter"){
+                    popupOK.click();
+                }
+            })
+            popupContent.appendChild(node);
+            node.focus();
+            popupOK.onclick = function(){
+                changeDayContent(dayDiv, actionType, node.value);
+            }
+        }
+    }
+    else if (actionType === 'link' || actionType === 'personal-link') {
+        instructions.innerHTML = "Enter the URL";
+        popupContent.innerHTML = "";
+        const node = document.createElement("input");
+        node.type = "text";
+        node.addEventListener("keypress", function(event){
+            if(event.key == "Enter"){
+                popupOK.click();
+            }
+        })
+        popupContent.appendChild(node);
+        node.focus();
+        const pnode = document.createElement("p");
+        pnode.innerHTML = "Enter the link text"
+        popupContent.appendChild(pnode);
+        const node2 = document.createElement("input");
+        node2.type = "text";
+        node2.addEventListener("keypress", function(event){
+            if(event.key == "Enter"){
+                popupOK.click();
+            }
+        })
+        popupContent.appendChild(node2);
+        popupOK.onclick = function(){
+            if(node.value && node2.value){
+                changeDayContent(dayDiv, actionType, node2.value, node.value);
+            }
+        }
+    }
+    else {
+        instructions.innerHTML = "Enter content text";
+        popupContent.innerHTML = "";
+        const node = document.createElement("input");
+        node.type = "text";
+        node.addEventListener("keypress", function(event){
+            if(event.key == "Enter"){
+                popupOK.click();
+            }
+        })
+        popupContent.appendChild(node);
+        node.focus();
+        popupOK.onclick = function(){
+            changeDayContent(dayDiv, actionType, node.value);
+        }
+    }
+}
+
+function changeDayContent(dayDiv, actionType, text, url=null){
+    if(actionType == "holiday"){
+        if(text){
+            dayDiv.classList.add('holiday');
+            const reasonP = document.createElement('p');
+            reasonP.className = 'holiday-reason';
+            reasonP.textContent = text;
+            dayDiv.appendChild(reasonP);
+        }
+    }
+    else if(actionType === "link" || actionType === "personal-link"){
+        if (url && text) {
+            const item = document.createElement('p');
+            item.className = actionType;
+            item.innerHTML = `<a href="${url}" target="_blank">${text}</a>`;
+            item.addEventListener('click', (e) => editItem(e, item));
+            item.draggable = true; // Make item draggable
+            item.id = `item-${Date.now()}`; // Assign a unique id
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragover', handleDragOver);
+            item.addEventListener('drop', handleDrop);
+            const dragHandle = document.createElement('span');
+            dragHandle.className = 'drag-handle';
+            dragHandle.innerHTML = '⇅'; // Drag handle icon
+            dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+            dragHandle.addEventListener('dragstart', handleDragStart);
+            item.prepend(dragHandle);
+            dayDiv.appendChild(item);
+            markChanges(); // Mark changes
+        }
+    }
+    else{
+        if (text) {
+            const item = document.createElement('p');
+            item.className = actionType;
+            item.innerHTML = text; // Allow HTML input for hyperlinks
+            item.addEventListener('click', (e) => editItem(e, item));
+            item.draggable = true; // Make item draggable
+            item.id = `item-${Date.now()}`; // Assign a unique id
+            item.addEventListener('dragstart', handleDragStart);
+            item.addEventListener('dragover', handleDragOver);
+            item.addEventListener('drop', handleDrop);
+            const dragHandle = document.createElement('span');
+            dragHandle.className = 'drag-handle';
+            dragHandle.innerHTML = '⇅'; // Drag handle icon
+            dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+            dragHandle.addEventListener('dragstart', handleDragStart);
+            item.prepend(dragHandle);
+            dayDiv.appendChild(item);
+            markChanges(); // Mark changes
+        }
+    }
+    togglePopup();
+}
+
+function clearPopup(){
+    popupContent.innerHTML = "";
+    instructions.innerHTML = "";
 }
 
 function generateCalendar() {
@@ -87,8 +228,12 @@ function generateCalendar() {
 }
 
 function handleDayClick(dayDiv) {
-    const action = prompt("Select action:\n1: Content\n2: Eval\n3: Link\n4: Homework\n5: Personal Note\n6: Personal Link\n7: Holiday");
-    if (action === null) return; // Exit if the user presses cancel
+    togglePopup();
+    serveOptions(dayDiv);
+}
+
+function createContent(dayDiv, action){
+    // if (action === null) return; // Exit if the user presses cancel
     let actionType;
     switch (action) {
         case '1':
@@ -116,64 +261,65 @@ function handleDayClick(dayDiv) {
             alert("Invalid selection. Please enter a number between 1 and 7.");
             return;
     }
-    if (actionType === 'holiday') {
-        if (dayDiv.classList.contains('holiday')) {
-            dayDiv.classList.remove('holiday');
-            dayDiv.querySelector('.holiday-reason').remove();
-        } else {
-            const reason = prompt("Enter reason for holiday:");
-            if (reason) {
-                dayDiv.classList.add('holiday');
-                const reasonP = document.createElement('p');
-                reasonP.className = 'holiday-reason';
-                reasonP.textContent = reason;
-                dayDiv.appendChild(reasonP);
-            }
-        }
-    } else if (actionType === 'link' || actionType === 'personal-link') {
-        const url = prompt("Enter URL:");
-        const linkText = prompt("Enter link text:");
-        if (url && linkText) {
-            const item = document.createElement('p');
-            item.className = actionType;
-            item.innerHTML = `<a href="${url}" target="_blank">${linkText}</a>`;
-            item.addEventListener('click', (e) => editItem(e, item));
-            item.draggable = true; // Make item draggable
-            item.id = `item-${Date.now()}`; // Assign a unique id
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragover', handleDragOver);
-            item.addEventListener('drop', handleDrop);
-            const dragHandle = document.createElement('span');
-            dragHandle.className = 'drag-handle';
-            dragHandle.innerHTML = '⇅'; // Drag handle icon
-            dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
-            dragHandle.addEventListener('dragstart', handleDragStart);
-            item.prepend(dragHandle);
-            dayDiv.appendChild(item);
-            markChanges(); // Mark changes
-        }
-    } else {
-        const itemText = prompt("Enter item text");
-        if (itemText) {
-            const item = document.createElement('p');
-            item.className = actionType;
-            item.innerHTML = itemText; // Allow HTML input for hyperlinks
-            item.addEventListener('click', (e) => editItem(e, item));
-            item.draggable = true; // Make item draggable
-            item.id = `item-${Date.now()}`; // Assign a unique id
-            item.addEventListener('dragstart', handleDragStart);
-            item.addEventListener('dragover', handleDragOver);
-            item.addEventListener('drop', handleDrop);
-            const dragHandle = document.createElement('span');
-            dragHandle.className = 'drag-handle';
-            dragHandle.innerHTML = '⇅'; // Drag handle icon
-            dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
-            dragHandle.addEventListener('dragstart', handleDragStart);
-            item.prepend(dragHandle);
-            dayDiv.appendChild(item);
-            markChanges(); // Mark changes
-        }
-    }
+    serveContent(dayDiv, actionType);
+    // if (actionType === 'holiday') {
+    //     if (dayDiv.classList.contains('holiday')) {
+    //         dayDiv.classList.remove('holiday');
+    //         dayDiv.querySelector('.holiday-reason').remove();
+    //     } else {
+    //         const reason = prompt("Enter reason for holiday:");
+    //         if (reason) {
+    //             dayDiv.classList.add('holiday');
+    //             const reasonP = document.createElement('p');
+    //             reasonP.className = 'holiday-reason';
+    //             reasonP.textContent = reason;
+    //             dayDiv.appendChild(reasonP);
+    //         }
+    //     }
+    // } else if (actionType === 'link' || actionType === 'personal-link') {
+    //     const url = prompt("Enter URL:");
+    //     const linkText = prompt("Enter link text:");
+    //     if (url && linkText) {
+    //         const item = document.createElement('p');
+    //         item.className = actionType;
+    //         item.innerHTML = `<a href="${url}" target="_blank">${linkText}</a>`;
+    //         item.addEventListener('click', (e) => editItem(e, item));
+    //         item.draggable = true; // Make item draggable
+    //         item.id = `item-${Date.now()}`; // Assign a unique id
+    //         item.addEventListener('dragstart', handleDragStart);
+    //         item.addEventListener('dragover', handleDragOver);
+    //         item.addEventListener('drop', handleDrop);
+    //         const dragHandle = document.createElement('span');
+    //         dragHandle.className = 'drag-handle';
+    //         dragHandle.innerHTML = '⇅'; // Drag handle icon
+    //         dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+    //         dragHandle.addEventListener('dragstart', handleDragStart);
+    //         item.prepend(dragHandle);
+    //         dayDiv.appendChild(item);
+    //         markChanges(); // Mark changes
+    //     }
+    // } else {
+    //     const itemText = prompt("Enter item text");
+    //     if (itemText) {
+    //         const item = document.createElement('p');
+    //         item.className = actionType;
+    //         item.innerHTML = itemText; // Allow HTML input for hyperlinks
+    //         item.addEventListener('click', (e) => editItem(e, item));
+    //         item.draggable = true; // Make item draggable
+    //         item.id = `item-${Date.now()}`; // Assign a unique id
+    //         item.addEventListener('dragstart', handleDragStart);
+    //         item.addEventListener('dragover', handleDragOver);
+    //         item.addEventListener('drop', handleDrop);
+    //         const dragHandle = document.createElement('span');
+    //         dragHandle.className = 'drag-handle';
+    //         dragHandle.innerHTML = '⇅'; // Drag handle icon
+    //         dragHandle.addEventListener('mousedown', (e) => e.stopPropagation()); // Prevent triggering editItem
+    //         dragHandle.addEventListener('dragstart', handleDragStart);
+    //         item.prepend(dragHandle);
+    //         dayDiv.appendChild(item);
+    //         markChanges(); // Mark changes
+    //     }
+    // }
 }
 
 function editItem(event, item) {

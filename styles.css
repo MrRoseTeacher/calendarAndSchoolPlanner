@@ -31,7 +31,7 @@ body {
 }
 
 #popup{
-    opacity: 100;
+    opacity: 0;
     transition: opacity 0.15s ease-in-out;
     position: absolute;
     width: 24rem;
@@ -49,6 +49,9 @@ body {
     display:block;
     width:97%;
     margin:0;
+}
+
+#popup input:last-of-type{
     margin-bottom:4rem;
 }
 
