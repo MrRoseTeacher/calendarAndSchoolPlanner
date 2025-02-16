@@ -8,7 +8,7 @@ let inputMenuToggle = false;
 let optionsDiag = false;
 let contentDiag = false;
 let linkDiag = false;
-let persistentInput = false;
+let persistentInput = true;
 let currentAction = 1;
 let targetDate = "";
 const saveButton = document.getElementById("save-button");
@@ -264,7 +264,7 @@ function generateCalendar() {
             if (currentDate.getDay() === 5) { // Friday
                 const copyButton = document.createElement('button');
                 copyButton.innerHTML = '<span class="material-symbols-outlined">content_copy</span>'; // Material Symbols icon
-                copyButton.style = 'padding: 5px; width: 30px; height: 30px; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer;';
+                copyButton.style = 'padding: 5px; width: 30px; height: 30px; border: none; background-color: var(--accent); color: var(--white); border-radius: 4px; cursor: pointer;';
                 copyButton.addEventListener('click', () => copyWeek(currentDate));
                 calendar.appendChild(copyButton);
             }
@@ -698,7 +698,7 @@ function renderCalendar(calendarData) {
         if ((index + 1) % 5 === 0) { // After every 5 days
             const copyButton = document.createElement('button');
             copyButton.innerHTML = '<span class="material-symbols-outlined">content_copy</span>'; // Material Symbols icon
-            copyButton.style = 'padding: 5px; width: 30px; height: 30px; border: none; background-color: #007bff; color: #fff; border-radius: 4px; cursor: pointer;';
+            copyButton.style = 'padding: 5px; width: 30px; height: 30px; border: none; background-color: var(--accent); color: var(--white); border-radius: 4px; cursor: pointer;';
             copyButton.addEventListener('click', () => copyWeek(date));
             calendar.appendChild(copyButton);
         }
@@ -708,20 +708,20 @@ function renderCalendar(calendarData) {
 function getItemStyle(type) {
     switch (type) {
         case 'content':
-            return 'background-color: #d1ecf1; color: #0c5460;';
+            return 'background-color: #a1cde6; color: #00022B; border-radius: 4px;';
         case 'eval':
-            return 'background-color: #d4edda; color: #155724;';
+            return 'background-color: #a9d7b7; color: #243127; border-radius: 4px;';
         case 'homework':
-            return 'background-color: #fff3cd; color: #856404;';
+            return 'background-color: #FFDDBA; color: #703800; border-radius: 4px;';
         case 'holiday':
-            return 'background-color: #ffcccc; color: #721c24;';
+            return 'background-color: #f9b1ac; color: #52141A;';
         case 'holiday-reason':
-            return 'background-color: #ffcccc; color: #721c24;';
+            return 'background-color: #f9b1ac; color: #52141A;';
         case 'link':
-            return 'background-color: #cce5ff; color: #004085;';
+            return 'background-color: #C5C4E3; color: #4E4C4F; border-radius: 4px;';
         case 'personal-note':
         case 'personal-link':
-            return 'background-color: #e2e3e5; color: #383d41;';
+            return 'background-color: #dbdbdb; color: #4E4C4F; border-radius: 4px;';
         default:
             return '';
     }

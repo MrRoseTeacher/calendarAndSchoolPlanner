@@ -2,26 +2,28 @@
 @import url('https://fonts.googleapis.com/css2?family=Source+Code+Pro:ital,wght@0,200..900;1,200..900&display=swap');
 
 :root{
-    --accent: #007bff;
-    --accent-hover: #0056b3;
+    --accent: #0855b1;
+    --accent-hover: #010e54;
     --darkAccent: #535353;
     --text: #3f3f3f;
+    --darktext: #242424;
     --white: #fbfbfb;
-    --bg: #f0f0f0;
-    --content: #d1ecf1;
-    --content-text: #0c5460;
-    --eval: #d4edda;
-    --eval-text:#155724;
-    --link: #cce5ff;
-    --link-text: #004085;
-    --homework: #fff3cd;
-    --homework-text: #856404;
-    --personalNote: #e2e3e5;
-    --personalNote-text: #383d41;
-    --personalLink: #e2e3e5;
-    --personalLink-text: #383d41;
-    --holiday: #ffcccc;
-    --holiday-text: #721c24;
+    --bg: #eef3f9;
+    --content: #a1cde6;
+    --content-text: #00022B;
+    --eval: #a9d7b7;
+    --eval-text:#243127;
+    --link: #C5C4E3;
+    --link-text: #322C63;
+    --homework: #FFDDBA;
+    --homework-text: #703800;
+    --personalNote: #dbdbdb;
+    --personalNote-text: #4E4C4F;
+    --personalLink: #dbdbdb;
+    --personalLink-text: #4E4C4F;
+    --holiday: #f9b1ac;
+    --holiday-text: #52141A;
+    --notification: #FEB848;
 }
 
 html{
@@ -179,7 +181,6 @@ body {
     margin-left:0 !important;
     padding: 0.2rem 0.5rem 0.3rem 0.5rem !important;
     border:none;
-    visibility: hidden;
 }
 
 #alt-notification{
@@ -258,7 +259,7 @@ button{
 }
 
 .button-default:disabled {
-    background-color: #ccc;
+    background-color: var(--personalLink);
     cursor: not-allowed;
 }
 
@@ -299,21 +300,25 @@ button{
 .content {
     background-color: var(--content);
     color: var(--content-text); /* Ensuring contrast */
+    border-radius:4px;
 }
 
 .homework {
     background-color: var(--homework);
     color: var(--homework-text); /* Ensuring contrast */
+    border-radius:4px;
 }
 
 .eval {
     background-color: var(--eval);
-    color: var(--eval-text) /* Ensuring contrast */
+    color: var(--eval-text); /* Ensuring contrast */
+    border-radius:4px;
 }
 
 .link {
     background-color: var(--link);
     color: var(--link-text); /* Ensuring contrast */
+    border-radius:4px;
 }
 
 .link a {
@@ -330,8 +335,8 @@ button{
 }
 
 .notification {
-    background-color: #d1ecf1; /* Softer color */
-    color: #0c5460; /* Ensuring contrast */
+    background-color: var(--notification); /* Softer color */
+    color: var(--darktext); /* Ensuring contrast */
     padding: 10px;
     border-radius: 4px;
     margin-top: 10px;
@@ -342,6 +347,7 @@ button{
 .personal-note, .personal-link {
     background-color: var(--personalNote); /* Unique color */
     color: var(--personalNote-text); /* Ensuring contrast */
+    border-radius:4px;
 }
 
 .personal-link a {
