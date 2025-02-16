@@ -44,9 +44,6 @@ html{
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
     height: 100vh;
     background-color: var(--bg);
     margin: 0;
@@ -201,7 +198,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin-top: 20px;
+    margin: 20px auto 0 auto;
     width: 94%; /* Adjusted to accommodate wider day divs */
     display: flex;
     flex-direction: column;
@@ -275,7 +272,7 @@ button{
     display: none;
 }
 
-#calendar, .calendar {
+#calendar {
     margin-top: 20px;
     display: grid;
     grid-template-columns: repeat(5, 1fr) 50px; /* Adjusted to make the 6th column narrower */
@@ -369,7 +366,7 @@ button{
     .calendar-container{
         width:96%;
     }
-    #calendar, .calendar{
+    #calendar{
         gap: 5px;
     }
     #settings-bar{
@@ -413,7 +410,7 @@ button{
 }
 
 @media (max-width: 800px){
-    #calendar, .calendar {
+    #calendar {
         grid-template-columns: 1fr; /* Single column layout on small screens */
         gap: 10px;
     }
