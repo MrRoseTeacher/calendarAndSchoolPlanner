@@ -773,8 +773,8 @@ function dayStyle(day) {
         padding: ${styles.padding};
         border: ${styles.border};
         border-radius: ${styles.borderRadius};
-        background-color: ${isHoliday ? '#ffcccc' : styles.backgroundColor};
-        color: ${isHoliday ? '#721c24' : styles.color};
+        background-color: ${isHoliday ? '#f9b1ac' : styles.backgroundColor};
+        color: ${isHoliday ? '#52141A' : styles.color};
         min-height: ${styles.minHeight};
         cursor: ${styles.cursor};
         word-wrap: ${styles.wordWrap};
