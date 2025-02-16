@@ -431,6 +431,9 @@ button{
         background: var(--white);
         opacity: 0.95;
     }
+    .calendar-container{
+        width:100%;
+    }
 }
 
 .drag-handle {
