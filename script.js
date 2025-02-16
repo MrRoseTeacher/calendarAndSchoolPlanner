@@ -538,7 +538,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(month < 10){month = "0" + String(month);}
     let day = date.getDate();
     if(date.getDay() == 6){day += 2;}
-    else if(date.getDay() == 7){day += 1;}
+    else if(date.getDay() == 0){day += 1;}
     targetDate = year + "-" + month + "-" + day;
 });
 
