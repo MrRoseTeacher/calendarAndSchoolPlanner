@@ -736,20 +736,20 @@ function copyWeek(currentDate) {
     const days = Array.from(calendar.querySelectorAll('.day'));
     const startIndex = days.findIndex(day => day.id === `day-${currentDate.toISOString().split('T')[0]}`);
     const weekDays = days.slice(startIndex - 4, startIndex + 1); // Adjust this to select the desired week
-    let weekHTML = '<div class="calendar" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; width: 94%;">';
-    
+    let weekHTML = '<div class="calendar-conainer"><div class="calendar" >\n';
+    weekHTML += '<link rel="stylesheet" href="https://school-planner-beta.vercel.app/styles.css">\n';
+
     weekDays.forEach(day => {
-        const dayStyleString = dayStyle(day); // Generate the style string
         const dayHTML = day.outerHTML
-            .replace(/class="day holiday( drag-over)?"/, `class="day holiday" style="${dayStyleString}"`)
-            .replace(/class="day( drag-over)?"/, `class="day" style="${dayStyleString}"`);
+            .replace(/class="day holiday( drag-over)?"/, 'class="day holiday"')
+            .replace(/class="day( drag-over)?"/, 'class="day"');
         const tempDiv = document.createElement('div');
         tempDiv.innerHTML = dayHTML;
         const dayElement = tempDiv.firstChild;
-        
+
         dayElement.querySelectorAll('p').forEach(p => {
             if (!p.classList.contains('personal-note') && !p.classList.contains('personal-link')) {
-                p.style = getItemStyle(p.className);
+                p.removeAttribute('style'); // Remove inline styles
             } else {
                 p.remove(); // Remove personal notes and links
             }
@@ -766,7 +766,7 @@ function copyWeek(currentDate) {
         }
         weekHTML += tempDiv.innerHTML;
     });
-    weekHTML += '</div>';
+    weekHTML += '</div></div>';
     copyToClipboard(weekHTML);
     alert('Week copied to clipboard!');
 }

@@ -44,9 +44,9 @@ html{
 }
 
 body {
-    display: flex;
+    /* display: flex;
     justify-content: center;
-    align-items: flex-start;
+    align-items: flex-start; */
     height: 100vh;
     background-color: var(--bg);
     margin: 0;
@@ -201,7 +201,7 @@ body {
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
-    margin-top: 20px;
+    margin: 20px auto 0 auto;
     width: 94%; /* Adjusted to accommodate wider day divs */
     display: flex;
     flex-direction: column;
