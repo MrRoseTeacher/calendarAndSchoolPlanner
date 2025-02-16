@@ -40,7 +40,6 @@ function markChanges() {
 }
 
 window.addEventListener("keydown", function(event){
-    console.log(event.key);
     if(!popupToggle){
         if(event.key == "i"){
             if(persistentInput){
@@ -54,7 +53,8 @@ window.addEventListener("keydown", function(event){
             }
         }
     }
-    if(event.shiftKey && event.key == "s"){
+    if(event.shiftKey && event.code == "KeyS"){
+        console.log("Here");
         saveCalendar();
     }
     if(persistentInput && !popupToggle){
