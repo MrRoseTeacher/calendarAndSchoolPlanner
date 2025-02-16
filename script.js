@@ -708,7 +708,7 @@ function renderCalendar(calendarData) {
 function getItemStyle(type) {
     switch (type) {
         case 'content':
-            return 'background-color: #a1cde6; color: #00022B; border-radius: 4px;';
+            return 'background-color: #BEDDEE; color: #00022B; border-radius: 4px;';
         case 'eval':
             return 'background-color: #a9d7b7; color: #243127; border-radius: 4px;';
         case 'homework':
