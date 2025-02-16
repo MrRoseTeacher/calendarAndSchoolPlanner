@@ -126,6 +126,7 @@ body {
 .button-minimal{
     padding: 0.5rem;
     color: var(--text);
+    background: var(--bg);
 }
 
 .button-minimal-chosen{
