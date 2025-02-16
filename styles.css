@@ -24,6 +24,10 @@
     --holiday-text: #721c24;
 }
 
+html{
+    font-size: 16px;
+}
+
 .material-symbols-outlined {
     font-variation-settings:
     'FILL' 0,
@@ -34,6 +38,7 @@
 
 *{
     font-family: "Quicksand", sans-serif;
+    box-sizing: border-box;
 }
 
 body {
@@ -65,7 +70,7 @@ body {
 
 #popup input{
     display:block;
-    width:97%;
+    width:100%;
     margin:0;
 }
 
@@ -91,7 +96,7 @@ body {
 
 #alt-savebar, #input-settings{
     display:flex;
-    margin: 0.25rem 0.5rem 0.25rem 0;
+    margin: 0.25rem 0.15rem 0.25rem 0;
 }
 
 #alt-savebar button, #alt-savebar .notification{
@@ -143,7 +148,7 @@ body {
 
 #input-settings{
     display:flex;
-    margin-left:0.4rem;
+    margin-left:0.15rem;
 }
 
 #input-settings button{
@@ -157,7 +162,7 @@ body {
 }
 
 #input-toggle-menu{
-    left: 0.4rem;
+    left: 0.65rem;
     transition: opacity 0.15s ease-in-out;
     visibility: hidden;
     opacity: 0;
@@ -174,14 +179,15 @@ body {
     margin-left:0 !important;
     padding: 0.2rem 0.5rem 0.3rem 0.5rem !important;
     border:none;
+    visibility: hidden;
 }
 
 #alt-notification{
-    padding: 0.15rem 0.5rem 0.35rem 0.5rem !important;
+    padding: 0.15rem 0.6rem 0.35rem 0.6rem !important;
 }
 
 #current-input-menu{
-    left:2.4rem;
+    left:2.65rem;
     transition: opacity 0.15s ease-in-out;
     visibility: hidden;
     opacity: 0;
@@ -194,7 +200,7 @@ body {
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     text-align: center;
     margin-top: 20px;
-    width: 90%; /* Adjusted to accommodate wider day divs */
+    width: 94%; /* Adjusted to accommodate wider day divs */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -272,7 +278,7 @@ button{
     display: grid;
     grid-template-columns: repeat(5, 1fr) 50px; /* Adjusted to make the 6th column narrower */
     gap: 10px;
-    width: 94%; /* Adjusted width */
+    width: 96%; /* Adjusted width */
 }
 
 .day {
@@ -352,23 +358,18 @@ button{
 }
 
 /* Media query for responsive design */
-@media (max-width: 800px) {
-    .input-group {
-        flex-direction: column; /* Stack inputs and buttons vertically */
-        align-items: stretch; /* Stretch inputs and buttons to full width */
-    }
-
-    #calendar {
-        grid-template-columns: 1fr; /* Single column layout on small screens */
-    }
-
-    input[type="date"], input[type="text"], button {
-        width: 100%; /* Full width for inputs and buttons */
-        margin: 5px 0; /* Reduce margin for better spacing */
-    }
-}
-
 @media (max-width: 1080px) {
+    .calendar-container{
+        width:96%;
+    }
+    #calendar{
+        gap: 5px;
+    }
+    #settings-bar{
+        background: var(--white);
+        opacity: 0.95;
+        height:3rem;
+    }
     .input-group {
         flex-direction: column; /* Stack inputs and buttons vertically */
         align-items: center; /* Center inputs and buttons */
@@ -381,6 +382,48 @@ button{
     .input-subgroup {
         flex-direction: row; /* Keep inputs and buttons in a row */
         align-items: center; /* Center inputs and buttons */
+    }
+    #input-toggle-button{
+        padding: 0.25rem 1rem;
+    }
+    #input-toggle-menu{
+        left: 0.4rem;
+        bottom: 3.4rem;
+    }
+    #current-input{
+        padding: 0.25rem 1rem !important;
+    }
+    #current-input-menu{
+        left:2.9rem;
+        bottom: 3.4rem;
+    }
+    #alt-savebar button{
+        padding: 0.25rem 1rem;
+    }
+    #alt-notification{
+        padding: 0.65rem 1rem 0.35rem 1rem !important;
+    }
+}
+
+@media (max-width: 800px){
+    #calendar {
+        grid-template-columns: 1fr; /* Single column layout on small screens */
+        gap: 10px;
+    }
+    #settings-bar{
+        background: none;
+        opacity: 1;
+    }
+    #popup{
+        width:96%;
+        left:2%;
+    }    
+}
+
+@media (max-width: 500px){
+    #settings-bar{
+        background: var(--white);
+        opacity: 0.95;
     }
 }
 
