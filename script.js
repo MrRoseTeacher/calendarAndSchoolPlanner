@@ -186,6 +186,7 @@ function changeDayContent(dayDiv, actionType, text, url=null){
             reasonP.className = 'holiday-reason';
             reasonP.textContent = text;
             dayDiv.appendChild(reasonP);
+            markChanges();
         }
     }
     else if(actionType === "link" || actionType === "personal-link"){
@@ -547,6 +548,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function toggleCurrentInputMenu(){
+    if(inputMenuToggle){
+        toggleInputMenu();
+    }
     currentInputMenuToggle = !currentInputMenuToggle;
     if(currentInputMenuToggle){
         currentInputMenu.style.opacity = 1;
@@ -559,6 +563,9 @@ function toggleCurrentInputMenu(){
 }
 
 function toggleInputMenu(){
+    if(currentInputMenuToggle){
+        toggleCurrentInputMenu();
+    }
     inputMenuToggle = !inputMenuToggle;
     if(inputMenuToggle){
         inputToggleMenu.style.opacity = 1;
@@ -731,12 +738,20 @@ function getItemStyle(type) {
     }
 }
 
+function showCopyNotification(){
+    const notification = document.getElementById("copy-notification");
+    notification.style.visibility = "visible";
+    notification.style.opacity = "1";
+    setTimeout(function(){notification.style.opacity = "0";}, 1650);
+    setTimeout(function(){notification.style.visibility = "hidden";}, 1850);
+}
+
 function copyWeek(currentDate) {
     const calendar = document.getElementById('calendar');
     const days = Array.from(calendar.querySelectorAll('.day'));
     const startIndex = days.findIndex(day => day.id === `day-${currentDate.toISOString().split('T')[0]}`);
     const weekDays = days.slice(startIndex - 4, startIndex + 1); // Adjust this to select the desired week
-    let weekHTML = '<div class="calendar" style="display: grid; grid-template-columns: repeat(5, 20%); font-size: 0.9rem; gap: 5px; width: 96%;">';
+    let weekHTML = '<div class="calendar" style="display: grid; grid-template-columns: repeat(5, 20%); gap: 5px; width: 96%;">';
     
     weekDays.forEach(day => {
         const dayHTML = day.outerHTML
@@ -767,7 +782,7 @@ function copyWeek(currentDate) {
     });
     weekHTML += '</div></div>';
     copyToClipboard(weekHTML);
-    alert('Week copied to clipboard!');
+    showCopyNotification();
 }
 function dayStyle(day) {
     const styles = window.getComputedStyle(day);

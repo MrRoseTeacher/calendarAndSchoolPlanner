@@ -205,6 +205,10 @@ body {
     align-items: center;
 }
 
+input[type="date"]{
+    color: var(--text);
+}
+
 .input-group {
     display: flex;
     flex-wrap: nowrap;
@@ -250,6 +254,7 @@ button{
     cursor: pointer;
     display: inline-block;
     margin: 10px 5px;
+    font-weight: 500;
 }
 
 .button-default:hover, .custom-file-upload:hover {
@@ -275,9 +280,9 @@ button{
 #calendar {
     margin-top: 20px;
     display: grid;
-    grid-template-columns: repeat(5, 1fr) 50px; /* Adjusted to make the 6th column narrower */
+    grid-template-columns: repeat(5, 1fr) 50px; /* Last short column for copy button */
     gap: 10px;
-    width: 96%; /* Adjusted width */
+    width: 96%;
 }
 
 .day {
@@ -342,6 +347,21 @@ button{
     display: none;
 }
 
+#copy-notification{
+    padding: 2rem;
+    background: var(--accent);
+    color: var(--white);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.15s ease-in-out;
+    position: fixed;
+    top: 1.2rem;
+    left: calc(50vw - 10.5rem);
+    width: 21rem;
+    border-radius: 4px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+}
+
 .personal-note, .personal-link {
     background-color: var(--personalNote); /* Unique color */
     color: var(--personalNote-text); /* Ensuring contrast */
@@ -396,6 +416,7 @@ button{
     }
     #current-input{
         padding: 0.25rem 1rem !important;
+        font-weight: 500;
     }
     #current-input-menu{
         left:2.9rem;
@@ -406,6 +427,7 @@ button{
     }
     #alt-notification{
         padding: 0.65rem 1rem 0.35rem 1rem !important;
+        font-weight: 500;
     }
 }
 
