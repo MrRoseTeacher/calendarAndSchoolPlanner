@@ -750,7 +750,7 @@ function copyWeek(currentDate) {
     const days = Array.from(calendar.querySelectorAll('.day'));
     const startIndex = days.findIndex(day => day.id === `day-${currentDate.toISOString().split('T')[0]}`);
     const weekDays = days.slice(startIndex - 4, startIndex + 1); // Adjust this to select the desired week
-    let weekHTML = '<div class="calendar" style="display: grid; grid-template-columns: repeat(5, 20%); font-size: 0.9rem; gap: 5px; width: 96%;">';
+    let weekHTML = '<div class="calendar" style="display: grid; grid-template-columns: repeat(5, 20%); gap: 5px; width: 96%;">';
     
     weekDays.forEach(day => {
         const dayStyleString = dayStyle(day); // Generate the style string
