@@ -44,11 +44,12 @@ html{
 }
 
 body {
-    height: 100vh;
+    min-height: calc(100vh - 5rem);
     background-color: var(--bg);
     margin: 0;
     overflow: auto;
     color: var(--text);
+    padding-bottom: 5rem;
 }
 
 #popup{
@@ -192,7 +193,7 @@ body {
     opacity: 0;
 }
 
-.calendar-container {
+.calendar-container, .user-guide-container {
     background: var(--white);
     padding: 20px;
     border-radius: 8px;
@@ -203,6 +204,23 @@ body {
     display: flex;
     flex-direction: column;
     align-items: center;
+}
+
+.user-guide-container{
+    align-items: start;
+    text-align: left;
+}
+
+.user-guide-container ul li{
+    margin: 0.5rem 0;
+}
+
+.user-guide-container p{
+    margin-bottom: 0;
+}
+
+.user-guide-container #calendar{
+    margin-bottom: 2rem;
 }
 
 input[type="date"]{
@@ -381,6 +399,34 @@ button{
     color: var(--personalNote-text); /* Ensure visited link color stays the same */
 }
 
+.drag-handle {
+    cursor: grab;
+    margin-right: 5px;
+}
+
+.centered-link{
+    display:block;
+    margin: 2rem auto;
+    text-align:center;
+    text-decoration: none;
+    padding: 1rem;
+    color: var(--text);
+    width: 8rem;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    background: var(--white);
+    border-radius: 4px;
+}
+
+h1{
+    color: var(--text);
+    text-align:center;
+}
+
+.full-width-img{
+    width: 100%;
+    margin: 1rem 0;
+}
+
 /* Media query for responsive design */
 @media (max-width: 1080px) {
     .calendar-container{
@@ -457,9 +503,4 @@ button{
     .input-subgroup{
         gap: 4px;
     }
-}
-
-.drag-handle {
-    cursor: grab;
-    margin-right: 5px;
 }

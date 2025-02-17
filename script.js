@@ -5,9 +5,6 @@ let originalFileName; // Store the original file name for comparison
 let popupToggle = false;
 let currentInputMenuToggle = false;
 let inputMenuToggle = false;
-let optionsDiag = false;
-let contentDiag = false;
-let linkDiag = false;
 let persistentInput = true;
 let currentAction = 1;
 let targetDate = "";
@@ -52,10 +49,10 @@ window.addEventListener("keydown", function(event){
                 toggleInputMenu();
             }
         }
-    }
-    if(event.shiftKey && event.code == "KeyS"){
-        console.log("Here");
-        saveCalendar();
+        if(event.shiftKey && event.code == "KeyS"){
+            console.log("Here");
+            saveCalendar();
+        }
     }
     if(persistentInput && !popupToggle){
         if(/[1-7]/g.test(event.key)){
@@ -86,9 +83,6 @@ currentInput.onclick = toggleCurrentInputMenu;
 inputToggleButton.onclick = toggleInputMenu;
 
 function serveOptions(dayDiv){
-    optionsDiag = true;
-    contentDiag = false;
-    linkDiag = false;
     instructions.innerHTML = "Select action:<br>1: Content<br>2: Eval<br>3: Link<br>4: Homework<br>5: Personal Note<br>6: Personal Link<br>7: Holiday"
     popupContent.innerHTML = "";
     const node = document.createElement("input");

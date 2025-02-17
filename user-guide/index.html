@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Guide: Semester Calendar</title>
+    <link rel="stylesheet" href="../styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0&icon_names=content_copy" />
+    <link rel="apple-touch-icon" sizes="180x180" href="../apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
+    <link rel="manifest" href="../site.webmanifest">
+</head>
+<body>
+    <h1>User Guide</h1>
+    <div class="user-guide-container">
+        <h2>Application Goals</h2>
+        <p>This calendar is desgined to do the following:
+            <ul>
+                <li>Generate a 5-day per week calendar based on a start date and end date.</li>
+                <li>Mark holidays, and input various items. The items may be content, evaluations, links, homework, personal notes, and personal links.</li>
+                <li>Copy the plan for the week to post on Brightspace for students. Items marked as personal notes or personal links are not included in the copy.</li>
+                <li>Drag and drop items between days and within the calendar</li>
+                <li>Save and load in calendars for different classes</li>
+                <li>Merge calendars- use a new blank calendar with new dates and holidays and merge the previous semester's topics</li>
+            </ul>
+        </p>
+        <h2>Sample Calendar</h2>
+        <p>The following sample is not interactive, but hopefully still provides clarity.
+        <ul>
+            <li>This two-week block was created by selecting September 8, 2025 as the start date and September 19, 2025 as the end date</li>
+            <li>Days marked as holidays appear pink, content items are blue, evaluations are green, links are purple, homework is yellow, and personal items are grey.</li>
+            <li>Clicking and dragging the ⇅ symbol allows you to move around items to different days.</li>
+            <li>Selecting ⤨ at the top of each day sorts the items by colour-coded category</li>
+            <li>Selecting <button style="padding: 5px; width: 30px; height: 30px; border: none; background-color: var(--accent); color: var(--white); border-radius: 4px; cursor: pointer;"><span class="material-symbols-outlined">content_copy</span></button> will copy the HTML code for that week to post on Brightspace preserving the formatting.</li>
+        </ul> </p>
+        <div id="calendar"><div class="day holiday" id="day-2025-09-08"><strong>Sep 8</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span><p class="holiday-reason">Labour Day</p></div><div class="day holiday" id="day-2025-09-09"><strong>Sep 9</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span><p class="holiday-reason">PA Day</p></div><div class="day" id="day-2025-09-10"><strong>Sep 10</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span><p class="content" draggable="true" id="item-1739824145601"><span class="drag-handle">⇅</span>Icebreakers</p><p class="content" draggable="true" id="item-1739824238117"><span class="drag-handle">⇅</span>Student Survey</p><p class="link" draggable="true" id="item-1739824277415"><span class="drag-handle">⇅</span><a href="https://www.google.ca" target="_blank">Sample Link</a></p><p class="personal-note" draggable="true" id="item-1739824419314"><span class="drag-handle">⇅</span>Play 2 truths and a lie</p></div><div class="day drag-over" id="day-2025-09-11"><strong>Sep 11</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span><p class="eval" draggable="true" id="item-1739824313248"><span class="drag-handle">⇅</span>Diagnostic Test</p><p class="personal-link" draggable="true" id="item-1739824343871"><span class="drag-handle">⇅</span><a href="https://www.google.ca" target="_blank">Sample Google Drive link to Diagnostic</a></p><p class="content" draggable="true" id="item-1739824445163"><span class="drag-handle">⇅</span>Building relationships activity</p></div><div class="day" id="day-2025-09-12"><strong>Sep 12</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span><p class="homework" draggable="true" id="item-1739824384961"><span class="drag-handle">⇅</span>Review Exercises</p><p class="link" draggable="true" id="item-1739824512579"><span class="drag-handle">⇅</span><a href="https://www.youtube.com" target="_blank">YouTube Video</a></p></div><button style="padding: 5px; width: 30px; height: 30px; border: none; background-color: var(--accent); color: var(--white); border-radius: 4px; cursor: pointer;"><span class="material-symbols-outlined">content_copy</span></button><div class="day" id="day-2025-09-15"><strong>Sep 15</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span></div><div class="day" id="day-2025-09-16"><strong>Sep 16</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span></div><div class="day" id="day-2025-09-17"><strong>Sep 17</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span></div><div class="day" id="day-2025-09-18"><strong>Sep 18</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span></div><div class="day" id="day-2025-09-19"><strong>Sep 19</strong><span class="sort-icon" style="cursor: pointer; margin-left: 5px;">⤨</span></div><button style="padding: 5px; width: 30px; height: 30px; border: none; background-color: var(--accent); color: var(--white); border-radius: 4px; cursor: pointer;"><span class="material-symbols-outlined">content_copy</span></button></div>
+        <h2>Saving and Loading Calendars</h2>
+        <p>Calendars are saved as .json files. You may keep these files somewhere convenient such as your Google Drive. You may use the website on your mobile phone, and keeping your files in your Google Drive can make this easier. As you make changes, a notification will appear at the top of the page as well as on the bottom (!). You can save by selecting the save button at the top or bottom (S). The filename for your calendar will match what you've entered in as the calendar title. Use the load button to choose a calendar file to load.</p>
+        <h2>Merging Calendars</h2>
+        <p>To merge a calendar, start by generating a new calendar and mark the new semester holidays. You may also load in a blank semester calendar instead of generating your own. Next, select 'merge' and choose one of your previous calendar files. The resulting calendar will have the content of your previous calendar but will be updated with new dates and holidays. Change the title of your calendar and then save the file.</p>
+        <h2>Copying to Brightspace</h2>
+        <p>After you have copied the HTML code, you can paste the code in a Brightspace page or announcement. When in the text editor, first use your cursor to select where in the content you'd like the calendar week to appear. Then, you must open the "source code" window by selecting the button pictured.</p>
+        <img class="full-width-img" src="img/bspace-menu.png" alt="image showing how to locate the source code button">
+        <p>Then, paste your code and select "save" at the bottom of the source code window. In the annoucements section, the calendar will always show up in a single column. In a Brightspace content page, the calendar will appear with 5 columns.</p>
+        <p>To make the calendar adjust its look on content pages when viewed with a mobile device, add this code to the &lt;head&gt; of the Brightspace page.</p>
+        <p>&lt;link rel="stylesheet" href="https://school-planner-beta.vercel.app/brightspaceStyles.css"&gt;</p>
+        <p>It should appear as pictured below.</p>
+        <img class="full-width-img" src="img/bspace-head.png" alt="where to play the stylesheet link">
+        <h2>Input Modes and Keyboard Shortcuts</h2>
+        <p>There are 2 input modes: "Each Time" and "Persistent". In the "Each Time" mode, selecting a day will prompt you each time for which type of content to add. Using "Persistent" mode, you select which item you'd like to add and you may add several of those items without interacting with a prompt each time. Change the item type using the numbered button at the bottom left of the scrren.</p>
+        <p>You may change the input mode selecting the input button <span style='font-family: "Source Code Pro";'>(I)</span> at the bottom left of the screen. Using "Each Time" is recommended for new users and when on a mobile device. The default mode is "Persistent"</p>
+        <p>You may use the following keyboard shortcuts when the popup prompt is not open:
+            <ul>
+                <li>Press "i" to change the input mode</li>
+                <li>Press 1-7 while in persistent mode to change which content item to add next</li>
+                <li>Press "shift + s" to save your calendar</li>
+            </ul>
+        </p>
+    </div><!-- end calendar container-->
+    <a href="../" class="centered-link">Return</a>
+    <div id="copy-notification">HTML code for the week was copied</div>
+</body>
+</html>
