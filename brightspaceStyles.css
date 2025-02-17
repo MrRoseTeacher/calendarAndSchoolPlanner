@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Quicksand:wght@300..700&display=swap');
+
+:root{
+    --accent: #0855b1;
+    --accent-hover: #010e54;
+    --darkAccent: #535353;
+    --text: #3f3f3f;
+    --darktext: #242424;
+    --white: #fbfbfb;
+    --bg: #eef3f9;
+    --content: #BEDDEE;
+    --content-text: #00022B;
+    --eval: #a9d7b7;
+    --eval-text:#243127;
+    --link: #C5C4E3;
+    --link-text: #322C63;
+    --homework: #FFDDBA;
+    --homework-text: #703800;
+    --personalNote: #dbdbdb;
+    --personalNote-text: #4E4C4F;
+    --personalLink: #dbdbdb;
+    --personalLink-text: #4E4C4F;
+    --holiday: #f9b1ac;
+    --holiday-text: #52141A;
+    --notification: #FEB848;
+}
+
+*{
+    font-family: "Quicksand", sans-serif !important;
+    box-sizing: border-box !important;
+}
+
+.day {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: var(--bg);
+    min-height: 100px;
+    cursor: pointer;
+    word-wrap: break-word; /* Ensure text wraps within the box */
+}
+
+.holiday {
+    background-color: var(--holiday);
+    color: var(--holiday-text); /* Ensuring contrast */
+}
+
+.content {
+    background-color: var(--content);
+    color: var(--content-text); /* Ensuring contrast */
+    border-radius:4px;
+}
+
+.homework {
+    background-color: var(--homework);
+    color: var(--homework-text); /* Ensuring contrast */
+    border-radius:4px;
+}
+
+.eval {
+    background-color: var(--eval);
+    color: var(--eval-text); /* Ensuring contrast */
+    border-radius:4px;
+}
+
+.link {
+    background-color: var(--link);
+    color: var(--link-text); /* Ensuring contrast */
+    border-radius:4px;
+}
+
+.link a {
+    color: var(--link-text); /* Link color */
+    text-decoration: none; /* Remove underline */
+}
+
+.link a:hover {
+    text-decoration: underline; /* Underline on hover */
+}
+
+.link a:visited {
+    color: var(--link-text); /* Ensure visited link color stays the same */
+}
+
+@media (max-width: 500px){
+    .calendar{
+        grid-template-columns: repeat(5, 1fr) !important;
+    }
+}

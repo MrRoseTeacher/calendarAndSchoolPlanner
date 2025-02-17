@@ -547,6 +547,9 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 function toggleCurrentInputMenu(){
+    if(inputMenuToggle){
+        toggleInputMenu();
+    }
     currentInputMenuToggle = !currentInputMenuToggle;
     if(currentInputMenuToggle){
         currentInputMenu.style.opacity = 1;
@@ -559,6 +562,9 @@ function toggleCurrentInputMenu(){
 }
 
 function toggleInputMenu(){
+    if(currentInputMenuToggle){
+        toggleCurrentInputMenu();
+    }
     inputMenuToggle = !inputMenuToggle;
     if(inputMenuToggle){
         inputToggleMenu.style.opacity = 1;
@@ -731,6 +737,14 @@ function getItemStyle(type) {
     }
 }
 
+function showCopyNotification(){
+    const notification = document.getElementById("copy-notification");
+    notification.style.visibility = "visible";
+    notification.style.opacity = "1";
+    setTimeout(function(){notification.style.opacity = "0";}, 1650);
+    setTimeout(function(){notification.style.visibility = "hidden";}, 1850);
+}
+
 function copyWeek(currentDate) {
     const calendar = document.getElementById('calendar');
     const days = Array.from(calendar.querySelectorAll('.day'));
@@ -768,7 +782,7 @@ function copyWeek(currentDate) {
     });
     weekHTML += '</div>';
     copyToClipboard(weekHTML);
-    alert('Week copied to clipboard!');
+    showCopyNotification();
 }
 function dayStyle(day) {
     const styles = window.getComputedStyle(day);
