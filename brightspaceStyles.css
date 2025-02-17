@@ -84,6 +84,6 @@
 
 @media (max-width: 500px){
     .calendar{
-        grid-template-columns: repeat(5, 1fr) !important;
+        grid-template-columns: auto !important;
     }
 }
