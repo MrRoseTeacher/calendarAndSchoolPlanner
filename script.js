@@ -186,6 +186,7 @@ function changeDayContent(dayDiv, actionType, text, url=null){
             reasonP.className = 'holiday-reason';
             reasonP.textContent = text;
             dayDiv.appendChild(reasonP);
+            markChanges();
         }
     }
     else if(actionType === "link" || actionType === "personal-link"){

@@ -205,6 +205,10 @@ body {
     align-items: center;
 }
 
+input[type="date"]{
+    color: var(--text);
+}
+
 .input-group {
     display: flex;
     flex-wrap: nowrap;
@@ -250,6 +254,7 @@ button{
     cursor: pointer;
     display: inline-block;
     margin: 10px 5px;
+    font-weight: 500;
 }
 
 .button-default:hover, .custom-file-upload:hover {
@@ -411,6 +416,7 @@ button{
     }
     #current-input{
         padding: 0.25rem 1rem !important;
+        font-weight: 500;
     }
     #current-input-menu{
         left:2.9rem;
@@ -421,6 +427,7 @@ button{
     }
     #alt-notification{
         padding: 0.65rem 1rem 0.35rem 1rem !important;
+        font-weight: 500;
     }
 }
 
