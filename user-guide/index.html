@@ -30,6 +30,8 @@
         <ul>
             <li>This two-week block was created by selecting September 8, 2025 as the start date and September 19, 2025 as the end date</li>
             <li>Days marked as holidays appear pink, content items are blue, evaluations are green, links are purple, homework is yellow, and personal items are grey.</li>
+            <li>Selecting an item will open up a prompt to edit the text (and the URL if the item is a link)</li>
+            <li>You may delete an item by selecting it to edit, and then pressing OK after clearing the text from the input field</li>
             <li>Clicking and dragging the ⇅ symbol allows you to move around items to different days.</li>
             <li>Selecting ⤨ at the top of each day sorts the items by colour-coded category</li>
             <li>Selecting <button style="padding: 5px; width: 30px; height: 30px; border: none; background-color: var(--accent); color: var(--white); border-radius: 4px; cursor: pointer;"><span class="material-symbols-outlined">content_copy</span></button> will copy the HTML code for that week to post on Brightspace preserving the formatting.</li>
@@ -41,12 +43,12 @@
         <p>To merge a calendar, start by generating a new calendar and mark the new semester holidays. You may also load in a blank semester calendar instead of generating your own. Next, select 'merge' and choose one of your previous calendar files. The resulting calendar will have the content of your previous calendar but will be updated with new dates and holidays. Change the title of your calendar and then save the file.</p>
         <h2>Copying to Brightspace</h2>
         <p>After you have copied the HTML code, you can paste the code in a Brightspace page or announcement. When in the text editor, first use your cursor to select where in the content you'd like the calendar week to appear. Then, you must open the "source code" window by selecting the button pictured.</p>
-        <img class="full-width-img" src="img/bspace-menu.png" alt="image showing how to locate the source code button">
+        <img class="full-width-img" src="https://mrroseteacher.github.io/calendarAndSchoolPlanner/user-guide/img/bspace-menu.png" alt="image showing how to locate the source code button">
         <p>Then, paste your code and select "save" at the bottom of the source code window. In the annoucements section, the calendar will always show up in a single column. In a Brightspace content page, the calendar will appear with 5 columns.</p>
         <p>To make the calendar adjust its look on content pages when viewed with a mobile device, add this code to the &lt;head&gt; of the Brightspace page.</p>
         <p>&lt;link rel="stylesheet" href="https://school-planner-beta.vercel.app/brightspaceStyles.css"&gt;</p>
         <p>It should appear as pictured below.</p>
-        <img class="full-width-img" src="img/bspace-head.png" alt="where to play the stylesheet link">
+        <img class="full-width-img" src="https://mrroseteacher.github.io/calendarAndSchoolPlanner/user-guide/img/bspace-head.png" alt="where to play the stylesheet link">
         <h2>Input Modes and Keyboard Shortcuts</h2>
         <p>There are 2 input modes: "Each Time" and "Persistent". In the "Each Time" mode, selecting a day will prompt you each time for which type of content to add. Using "Persistent" mode, you select which item you'd like to add and you may add several of those items without interacting with a prompt each time. Change the item type using the numbered button at the bottom left of the scrren.</p>
         <p>You may change the input mode selecting the input button <span style='font-family: "Source Code Pro";'>(I)</span> at the bottom left of the screen. Using "Each Time" is recommended for new users and when on a mobile device. The default mode is "Persistent"</p>
