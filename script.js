@@ -723,7 +723,7 @@ function getItemStyle(type) {
         case 'holiday-reason':
             return 'background-color: #f9b1ac; color: #52141A;';
         case 'link':
-            return 'background-color: #C5C4E3; color: #4E4C4F; border-radius: 4px;';
+            return 'background-color: #C5C4E3; color: #322C63; border-radius: 4px;';
         case 'personal-note':
         case 'personal-link':
             return 'background-color: #dbdbdb; color: #4E4C4F; border-radius: 4px;';
