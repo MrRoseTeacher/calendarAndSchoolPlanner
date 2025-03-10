@@ -238,6 +238,22 @@ function generateCalendar() {
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
     const startDate = new Date(document.getElementById('start-date').value);
+    if{startDate.getDay() != 1}{
+        switch(startDate.geyDay()){
+            case 2:
+                startDate.setDate(startDate.getDate() - 1)
+                break;
+            case 3:
+                startDate.setDate(startDate.getDate() - 2)
+                break;
+            case 4:
+                startDate.setDate(startDate.getDate() - 3)
+                break;
+            case 5:
+                startDate.setDate(startDate.getDate() - 4)
+                break;
+        }
+    }
     const endDate = new Date(document.getElementById('end-date').value);
     const calendar = document.getElementById('calendar');
     calendar.innerHTML = '';
@@ -537,6 +553,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if(month < 10){month = "0" + String(month);}
     let day = date.getDate();
     if(date.getDay() == 6){day += 2;}
+    if(day < 10){day = "0" + String(day);}
     else if(date.getDay() == 0){day += 1;}
     targetDate = year + "-" + month + "-" + day;
 });
