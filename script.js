@@ -50,7 +50,6 @@ window.addEventListener("keydown", function(event){
             }
         }
         if(event.shiftKey && event.code == "KeyS"){
-            console.log("Here");
             saveCalendar();
         }
     }
@@ -238,18 +237,18 @@ function generateCalendar() {
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
     const startDate = new Date(document.getElementById('start-date').value);
-    if(startDate.getDay() != 1){
+    if(startDate.getDay() != 0){
         switch(startDate.getDay()){
-            case 2:
+            case 1:
                 startDate.setDate(startDate.getDate() - 1)
                 break;
-            case 3:
+            case 2:
                 startDate.setDate(startDate.getDate() - 2)
                 break;
-            case 4:
+            case 3:
                 startDate.setDate(startDate.getDate() - 3)
                 break;
-            case 5:
+            case 4:
                 startDate.setDate(startDate.getDate() - 4)
                 break;
         }
@@ -324,7 +323,7 @@ function createContent(dayDiv, action){
             actionType = 'holiday';
             break;
         default:
-            alert("Invalid selection. Please enter a number between 1 and 7.");
+            serveOptions(dayDiv);
             return;
     }
     serveContent(dayDiv, actionType);
@@ -778,6 +777,9 @@ function copyWeek(currentDate) {
                 p.style = getItemStyle(p.className);
             } else {
                 p.remove(); // Remove personal notes and links
+            }
+            if(p.classList.contains("link")){
+                p.querySelector("a").style.color = "#322C63";
             }
             // Remove drag handles
             const dragHandle = p.querySelector('.drag-handle');
