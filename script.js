@@ -435,6 +435,82 @@ function sortItems(dayDiv) {
     items.forEach(item => dayDiv.appendChild(item));
 }
 
+// async function saveCalendar() {
+//     const calendarTitle = document.getElementById('calendar-title').value.trim();
+//     if (!calendarTitle) {
+//         alert("Please enter a calendar title.");
+//         return;
+//     }
+//     const safeTitle = calendarTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+//     const newFileName = `${safeTitle}.json`;
+//     const calendar = document.getElementById('calendar');
+//     const days = Array.from(calendar.querySelectorAll('.day'));
+//     const calendarData = days.map(day => {
+//         const date = day.id.split('day-')[1];
+//         const items = Array.from(day.querySelectorAll('p')).map(item => {
+//             const itemClone = item.cloneNode(true);
+//             const dragHandle = itemClone.querySelector('.drag-handle');
+//             if (dragHandle) {
+//                 dragHandle.remove(); // Remove drag handle
+//             }
+//             return {
+//                 type: item.className,
+//                 text: itemClone.innerHTML // Save innerHTML to preserve hyperlinks
+//             };
+//         });
+//         return { date, items };
+//     });
+//     const json = JSON.stringify({ title: calendarTitle, data: calendarData }, null, 2);
+
+//     try {
+//         const isLocalServer = window.location.hostname === 'localhost';
+//         if (isLocalServer) {
+//             const response = await fetch('/api/save', {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json'
+//                 },
+//                 body: JSON.stringify({
+//                     file: {
+//                         name: newFileName,
+//                         content: json
+//                     }
+//                 })
+//             });
+//             if (!response.ok) {
+//                 throw new Error(`Failed to save calendar: ${response.statusText}`);
+//             }
+//             const result = await response.json();
+//             console.log('Calendar saved successfully on local server:', result);
+//         } else {
+
+//             if (!fileHandle || originalFileName !== newFileName) {
+//                 fileHandle = await window.showSaveFilePicker({
+//                     suggestedName: newFileName,
+//                     types: [
+//                         {
+//                             description: 'JSON Files',
+//                             accept: { 'application/json': ['.json'] }
+//                         }
+//                     ]
+//                 });
+//                 originalFileName = newFileName;
+//                 console.log('New fileHandle:', fileHandle);
+//                 console.log('New originalFileName:', originalFileName);
+//             }
+//             const writable = await fileHandle.createWritable();
+//             await writable.write(json);
+//             await writable.close();
+//         }
+//         changesMade = false; // Reset changes flag
+//         document.getElementById('notification').style.display = 'none'; // Hide notification
+//         altNotification.style.display = 'none';
+//     } catch (error) {
+//         console.error('Error saving calendar:', error);
+//         alert('An error occurred while saving the calendar. Please try again.');
+//     }
+// }
+
 async function saveCalendar() {
     const calendarTitle = document.getElementById('calendar-title').value.trim();
     if (!calendarTitle) {
@@ -463,27 +539,44 @@ async function saveCalendar() {
     const json = JSON.stringify({ title: calendarTitle, data: calendarData }, null, 2);
 
     try {
+        const isWebkit = /AppleWebKit/i.test(navigator.userAgent);
+        const isMobile = /Mobi|Android/i.test(navigator.userAgent);
         const isLocalServer = window.location.hostname === 'localhost';
-        if (isLocalServer) {
-            const response = await fetch('/api/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    file: {
-                        name: newFileName,
-                        content: json
-                    }
-                })
-            });
-            if (!response.ok) {
-                throw new Error(`Failed to save calendar: ${response.statusText}`);
-            }
-            const result = await response.json();
-            console.log('Calendar saved successfully on local server:', result);
-        } else {
 
+        if (!isWebkit || isMobile) {
+            if (isLocalServer) {
+                // Local server: Save using fetch API
+                const response = await fetch('/api/save', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        file: {
+                            name: newFileName,
+                            content: json
+                        }
+                    })
+                });
+                if (!response.ok) {
+                    throw new Error(`Failed to save calendar: ${response.statusText}`);
+                }
+                const result = await response.json();
+                console.log('Calendar saved successfully on local server:', result);
+            } else {
+                // Fallback to basic save functionality for non-Webkit browsers and mobile devices
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = newFileName;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        } else {
+            // Vercel: Save using File Handling API
             if (!fileHandle || originalFileName !== newFileName) {
                 fileHandle = await window.showSaveFilePicker({
                     suggestedName: newFileName,
@@ -495,8 +588,6 @@ async function saveCalendar() {
                     ]
                 });
                 originalFileName = newFileName;
-                console.log('New fileHandle:', fileHandle);
-                console.log('New originalFileName:', originalFileName);
             }
             const writable = await fileHandle.createWritable();
             await writable.write(json);
@@ -602,67 +693,152 @@ function scrollToDate(i, Arr){
     }
 }
 
-async function loadCalendar() {
+// async function loadCalendar() {
 
+//     changesMade = false; // Reset changes flag
+//     calendarLoaded = true; // Mark calendar as loaded
+//     document.getElementById('merge-button').disabled = false; // Enable merge button
+//     document.getElementById('notification').style.display = 'none'; // Hide notification
+//     altNotification.style.display = 'none';
+
+//     const isLocalServer = window.location.hostname === 'localhost';
+//     if (isLocalServer) {
+//         // Local server: Load from file input
+//         try {
+//             const [handle] = await window.showOpenFilePicker({
+//                 types: [
+//                     {
+//                         description: 'JSON Files',
+//                         accept: { 'application/json': ['.json'] }
+//                     }
+//                 ]
+//             });
+//             fileHandle = handle; // Store the file handle
+//             const file = await fileHandle.getFile();
+//             originalFileName = file.name; // Store the original file name
+//             console.log('Selected file:', file.name);
+//             const fileContent = await file.text();
+//             const calendarData = JSON.parse(fileContent);
+//             renderCalendar(calendarData);
+//         } catch (error) {
+//             if (error.name === "AbortError"){
+//                 console.error("User aborted file selection", error);
+//             }
+//             else{
+//                 console.error('Error loading calendar:', error);
+//                 alert('An error occurred while loading the calendar. Please try again.');
+//             }
+//         }
+//     } else {
+//         // Vercel: Load from Vercel Blob
+//         try {
+//             const [handle] = await window.showOpenFilePicker({
+//                 types: [
+//                     {
+//                         description: 'JSON Files',
+//                         accept: { 'application/json': ['.json'] }
+//                     }
+//                 ]
+//             });
+//             fileHandle = handle; // Store the file handle
+//             const file = await fileHandle.getFile();
+//             originalFileName = file.name; // Store the original file name
+//             console.log('Selected file:', file.name);
+//             const fileContent = await file.text();
+//             const calendarData = JSON.parse(fileContent);
+//             renderCalendar(calendarData);
+//         } catch (error) {
+//             if (error.name === "AbortError"){
+//                 console.error("User aborted file selection", error);
+//             }
+//             else{
+//                 console.error('Error loading calendar:', error.name);
+//                 alert('An error occurred while loading the calendar. Please try again.');
+//             }
+//         }
+//     }
+//     const dayList = document.getElementById('calendar').querySelectorAll('div');
+//     scrollToDate(0, dayList);
+// }
+
+async function loadCalendar() {
     changesMade = false; // Reset changes flag
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
     document.getElementById('notification').style.display = 'none'; // Hide notification
     altNotification.style.display = 'none';
 
-    const isLocalServer = window.location.hostname === 'localhost';
-    if (isLocalServer) {
-        // Local server: Load from file input
+    const isWebkit = /AppleWebKit/i.test(navigator.userAgent);
+    const isMobile = /Mobi|Android/i.test(navigator.userAgent);
+
+    if (!isWebkit || isMobile) {
+        // Fallback to basic load functionality for non-Webkit browsers and mobile devices
         try {
-            const [handle] = await window.showOpenFilePicker({
-                types: [
-                    {
-                        description: 'JSON Files',
-                        accept: { 'application/json': ['.json'] }
-                    }
-                ]
-            });
-            fileHandle = handle; // Store the file handle
-            const file = await fileHandle.getFile();
-            originalFileName = file.name; // Store the original file name
-            console.log('Selected file:', file.name);
-            const fileContent = await file.text();
-            const calendarData = JSON.parse(fileContent);
-            renderCalendar(calendarData);
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = 'application/json';
+            input.onchange = async (event) => {
+                const file = event.target.files[0];
+                const fileContent = await file.text();
+                const calendarData = JSON.parse(fileContent);
+                renderCalendar(calendarData);
+            };
+            input.click();
         } catch (error) {
-            if (error.name === "AbortError"){
-                console.error("User aborted file selection", error);
-            }
-            else{
-                console.error('Error loading calendar:', error);
-                alert('An error occurred while loading the calendar. Please try again.');
-            }
+            console.error('Error loading calendar:', error);
+            alert('An error occurred while loading the calendar. Please try again.');
         }
     } else {
-        // Vercel: Load from Vercel Blob
-        try {
-            const [handle] = await window.showOpenFilePicker({
-                types: [
-                    {
-                        description: 'JSON Files',
-                        accept: { 'application/json': ['.json'] }
-                    }
-                ]
-            });
-            fileHandle = handle; // Store the file handle
-            const file = await fileHandle.getFile();
-            originalFileName = file.name; // Store the original file name
-            console.log('Selected file:', file.name);
-            const fileContent = await file.text();
-            const calendarData = JSON.parse(fileContent);
-            renderCalendar(calendarData);
-        } catch (error) {
-            if (error.name === "AbortError"){
-                console.error("User aborted file selection", error);
+        const isLocalServer = window.location.hostname === 'localhost';
+        if (isLocalServer) {
+            // Local server: Load from file input
+            try {
+                const [handle] = await window.showOpenFilePicker({
+                    types: [
+                        {
+                            description: 'JSON Files',
+                            accept: { 'application/json': ['.json'] }
+                        }
+                    ]
+                });
+                fileHandle = handle; // Store the file handle
+                const file = await fileHandle.getFile();
+                originalFileName = file.name; // Store the original file name
+                const fileContent = await file.text();
+                const calendarData = JSON.parse(fileContent);
+                renderCalendar(calendarData);
+            } catch (error) {
+                if (error.name === "AbortError") {
+                    console.error("User aborted file selection", error);
+                } else {
+                    console.error('Error loading calendar:', error);
+                    alert('An error occurred while loading the calendar. Please try again.');
+                }
             }
-            else{
-                console.error('Error loading calendar:', error.name);
-                alert('An error occurred while loading the calendar. Please try again.');
+        } else {
+            // Vercel: Load from Vercel Blob
+            try {
+                const [handle] = await window.showOpenFilePicker({
+                    types: [
+                        {
+                            description: 'JSON Files',
+                            accept: { 'application/json': ['.json'] }
+                        }
+                    ]
+                });
+                fileHandle = handle; // Store the file handle
+                const file = await fileHandle.getFile();
+                originalFileName = file.name; // Store the original file name
+                const fileContent = await file.text();
+                const calendarData = JSON.parse(fileContent);
+                renderCalendar(calendarData);
+            } catch (error) {
+                if (error.name === "AbortError") {
+                    console.error("User aborted file selection", error);
+                } else {
+                    console.error('Error loading calendar:', error);
+                    alert('An error occurred while loading the calendar. Please try again.');
+                }
             }
         }
     }
