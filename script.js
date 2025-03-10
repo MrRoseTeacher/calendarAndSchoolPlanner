@@ -238,7 +238,7 @@ function generateCalendar() {
     calendarLoaded = true; // Mark calendar as loaded
     document.getElementById('merge-button').disabled = false; // Enable merge button
     const startDate = new Date(document.getElementById('start-date').value);
-    if{startDate.getDay() != 1}{
+    if(startDate.getDay() != 1){
         switch(startDate.geyDay()){
             case 2:
                 startDate.setDate(startDate.getDate() - 1)
