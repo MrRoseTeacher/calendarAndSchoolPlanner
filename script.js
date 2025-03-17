@@ -782,6 +782,8 @@ async function loadCalendar() {
                 const fileContent = await file.text();
                 const calendarData = JSON.parse(fileContent);
                 renderCalendar(calendarData);
+                const dayList = document.getElementById('calendar').querySelectorAll('div');
+                scrollToDate(0, dayList);
             };
             input.click();
         } catch (error) {
@@ -841,9 +843,9 @@ async function loadCalendar() {
                 }
             }
         }
+        const dayList = document.getElementById('calendar').querySelectorAll('div');
+        scrollToDate(0, dayList);
     }
-    const dayList = document.getElementById('calendar').querySelectorAll('div');
-    scrollToDate(0, dayList);
 }
 
 // Helper function to render the calendar
