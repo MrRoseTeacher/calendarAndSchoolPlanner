@@ -655,7 +655,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // else if(date.getDay() == 0){day += 1;}
     // targetDate = year + "-" + month + "-" + day;
     const cdate = new Date();
-    const date = new Date(cdate.getTime() - 7 * 24 * 60 * 60 * 1000);
+    const date = new Date(cdate.getTime() - 9 * 24 * 60 * 60 * 1000);
     let year = date.getFullYear()
     let month = date.getMonth()+1
     if(month < 10){month = "0" + String(month);}
