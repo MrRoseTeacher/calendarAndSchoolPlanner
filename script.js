@@ -645,17 +645,7 @@ document.addEventListener('DOMContentLoaded', () => {
         currentInput.style.visibility = "visible";
         toggleInputMenu();
     }
-    // const date = new Date();
-    // let year = date.getFullYear()
-    // let month = date.getMonth()+1
-    // if(month < 10){month = "0" + String(month);}
-    // let day = date.getDate();
-    // if(date.getDay() == 6){day += 2;}
-    // if(day < 10){day = "0" + String(day);}
-    // else if(date.getDay() == 0){day += 1;}
-    // targetDate = year + "-" + month + "-" + day;
-    const cdate = new Date();
-    const date = new Date(cdate.getTime() - 13 * 24 * 60 * 60 * 1000);
+    const date = new Date();
     let year = date.getFullYear()
     let month = date.getMonth()+1
     if(month < 10){month = "0" + String(month);}
@@ -664,6 +654,18 @@ document.addEventListener('DOMContentLoaded', () => {
     if(day < 10){day = "0" + String(day);}
     else if(date.getDay() == 0){day += 1;}
     targetDate = year + "-" + month + "-" + day;
+
+    //code for debugging and adjusting for previous dates
+    // const cdate = new Date();
+    // const date = new Date(cdate.getTime() - 13 * 24 * 60 * 60 * 1000);
+    // let year = date.getFullYear()
+    // let month = date.getMonth()+1
+    // if(month < 10){month = "0" + String(month);}
+    // let day = date.getDate();
+    // if(date.getDay() == 6){day += 2;}
+    // if(day < 10){day = "0" + String(day);}
+    // else if(date.getDay() == 0){day += 1;}
+    // targetDate = year + "-" + month + "-" + day;
 });
 
 function toggleCurrentInputMenu(){
