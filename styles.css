@@ -424,6 +424,7 @@ h1{
 
 .full-width-img{
     width: 100%;
+    max-width: 1000px;
     margin: 1rem 0;
 }
 
