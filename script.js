@@ -10,7 +10,7 @@ let currentAction = 1;
 let targetDate = "";
 const saveButton = document.getElementById("save-button");
 const altSave = document.getElementById("alt-save");
-// const altLoad = document.getElementById("alt-load");
+const calendarTitle = document.getElementById("calendar-title");
 const inputToggleButton = document.getElementById("input-toggle-button");
 const altNotification = document.getElementById("alt-notification");
 const inputToggleMenu = document.getElementById("input-toggle-menu");
@@ -37,7 +37,7 @@ function markChanges() {
 }
 
 window.addEventListener("keydown", function(event){
-    if(!popupToggle){
+    if(!popupToggle && document.activeElement != calendarTitle){
         if(event.key == "i"){
             if(persistentInput){
                 inputToggleMenu.querySelectorAll('button')[0].click()
@@ -59,6 +59,14 @@ window.addEventListener("keydown", function(event){
         currentInput.innerHTML = currentAction;
         currentInput.style.backgroundColor = colourPairs[Number(currentAction)-1][0];
         currentInput.style.color = colourPairs[Number(currentAction)-1][1];
+        }
+    }
+})
+
+window.addEventListener("keydown", async function(event){
+    if(!popupToggle && document.activeElement != calendarTitle){
+        if(event.shiftKey && event.code == "KeyL"){
+            await loadCalendar();
         }
     }
 })
