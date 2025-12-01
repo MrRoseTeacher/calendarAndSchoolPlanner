@@ -22,6 +22,16 @@ const popupOK = document.getElementById("popup-ok");
 const popupCancel = document.getElementById("popup-cancel");
 const popupContent = document.getElementById("popup-content");
 const colourPairs = [["var(--content)", "var(--content-text)"], ["var(--eval)", "var(--eval-text)"], ["var(--link)", "var(--link-text)"], ["var(--homework)", "var(--homework-text)"], ["var(--personalNote)", "var(--personalNote-text)"], ["var(--personalLink)", "var(--personalLink-text)"], ["var(--holiday)", "var(--holiday-text)"]];
+const daysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+
+function isLeapYear(year){
+    if(year % 4 == 0 && year % 100 != 0){
+        return true;
+    }
+    else{
+        return false;
+    }
+}
 
 function showNotification() {
     const notification = document.getElementById('notification');
@@ -653,19 +663,21 @@ document.addEventListener('DOMContentLoaded', () => {
     if(date.getDay() == 6){day += 2;}
     if(day < 10){day = "0" + String(day);}
     else if(date.getDay() == 0){day += 1;}
+    //check if date is valid, above code can generate dates like Nov. 31. Must roll over to the next month in those cases.
+    if(day > daysInMonth[Number(month) - 1]){
+        if(month == '02' && isLeapYear(year) && day == 29){
+            //Do nothing. Date is acceptable
+        }
+        day = 1;
+        if(Number(month) >= 12){
+            year++;
+            month = '01'; 
+        }
+        else{
+            month = '0' + String(Number(month)+1);
+        }
+    }
     targetDate = year + "-" + month + "-" + day;
-
-    //code for debugging and adjusting for previous dates
-    // const cdate = new Date();
-    // const date = new Date(cdate.getTime() - 13 * 24 * 60 * 60 * 1000);
-    // let year = date.getFullYear()
-    // let month = date.getMonth()+1
-    // if(month < 10){month = "0" + String(month);}
-    // let day = date.getDate();
-    // if(date.getDay() == 6){day += 2;}
-    // if(day < 10){day = "0" + String(day);}
-    // else if(date.getDay() == 0){day += 1;}
-    // targetDate = year + "-" + month + "-" + day;
 });
 
 function toggleCurrentInputMenu(){
