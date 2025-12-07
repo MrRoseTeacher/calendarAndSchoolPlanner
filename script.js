@@ -661,7 +661,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if(month < 10){month = "0" + String(month);}
     let day = date.getDate();
     if(date.getDay() == 6){day += 2;}
-    if(day < 10){day = "0" + String(day);}
     else if(date.getDay() == 0){day += 1;}
     //check if date is valid, above code can generate dates like Nov. 31. Must roll over to the next month in those cases.
     if(day > daysInMonth[Number(month) - 1]){
@@ -677,6 +676,7 @@ document.addEventListener('DOMContentLoaded', () => {
             month = '0' + String(Number(month)+1);
         }
     }
+    if(day < 10){day = "0" + String(day);}
     targetDate = year + "-" + month + "-" + day;
 });
 
